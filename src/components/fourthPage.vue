@@ -47,9 +47,11 @@
           </div>
         </div>
       </div>
+      <!--
       <div  class="box_bottom">
         <div class="send_btn">发送给Ta</div>
       </div>
+      -->
     </div>
 
   </div>

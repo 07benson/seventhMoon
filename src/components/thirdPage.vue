@@ -38,63 +38,13 @@
     data(){
       return {
         selectKeywords: 0,
-        keywordList: [/*{
-         "id": 0,
-         "name": "一开心",
-         selected: false
-         }, {
-         "id": 1,
-         "name": "二节日",
-         selected: false
-
-         }, {
-         "id": 2,
-         "name": "三嘻嘻",
-         selected: false
-
-         }, {
-         "id": 3,
-         "name": "四惊天",
-         selected: false
-
-         }, {
-         "id": 4,
-         "name": "五动地",
-         selected: false
-
-         }, {
-         "id": 5,
-         "name": "六六六",
-         selected: false
-
-         }, {
-         "id": 6,
-         "name": "七爱慕",
-         selected: false
-
-         }, {
-         "id": 7,
-         "name": "八情人节",
-         selected: false
-
-         }, {
-         "id": 8,
-         "name": "九搞笑",
-         selected: false
-
-         }*/],
+        keywordList: [],
          res:'',
          selecteId:[]
       }
     },
     created(){
       this.getKeywordList();
-//            var res = sessionStorage.getItem('response');
-//            this.keywordList = res['keyword'];
-//            let themeId = this.$route.query.themeid;
-//            for (var i = 0, len = this.keywordList.length; i < len; i++) {
-//                this.keywordList[i]['selected'] = false
-//            }
 
     },
     methods: {
@@ -524,6 +474,7 @@
   }
 
   .ai-area {
+    color: #fff;
     position: absolute;
     width: 280px;
     height: 100px;
