@@ -423,6 +423,7 @@
     }
     100% {
       top: 40%;
+      background-image: url('../assets/img/page_1/gender_male_selected@2x.png')
     }
   }
 
@@ -436,6 +437,7 @@
     }
     100% {
       top: 40%;
+      background-image: url('../assets/img/page_1/gender_female_selected@2x.png')
     }
   }
 

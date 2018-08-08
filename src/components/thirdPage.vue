@@ -115,7 +115,6 @@
             this.selecteId.splice(index,1)
           } else{
             this.selecteId.push(keywordid);
-            console.log(this.selecteId)
           };
         } else{
           this.selecteId.pop();
