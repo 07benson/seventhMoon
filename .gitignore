@@ -4,3 +4,6 @@
 .DS_Store
 */.idea/
 .idea/
+.babelrc
+.editorconfig
+.postcssrc.js
