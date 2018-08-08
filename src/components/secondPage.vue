@@ -2,12 +2,27 @@
   <div id="second-page">
     <img class="bg-img" src="../assets/img/page_1/bg01.png"/>
     <div class="content_box">
-      <div class="circle_box">
-        <div class="round round_0">
-          <div class="circle circle_0">{{ theme }}</div>
-          <div class="radio radio_0"></div>
-          <div class="bd bd_0"></div>
+      <div class="top_lamination">
+        <div class="top_relative">
+          <div class="main_div">
+            <div class="bd bd_0"></div>
+            <div class="round round_0">
+              <div class="radio radio_0"></div>
+            </div>
+            <div class="circle circle_0">{{ theme }}</div>
+            
+            <div class="btn_box btn_box_0 ">
+              <div class="man man_0" :class="{'man_1':gender=='male'}" @click="confirmGender('male')"></div>
+              <div class="woman woman_0" :class="{'woman_1':gender=='female'}" @click="confirmGender('female')"></div>
+              <input v-model="userName" type="text" placeholder="请输入姓名" v-on:input="guessGender($event)">
+              <button @click="nextPage()">AI</button>
+            </div>
+          </div>
+          
         </div>
+      </div>
+      <div class="circle_box">
+        
       </div>
       <div class="bottom_darkhill bottom_darkhill_0"></div>
       <div class="top_cloud"></div>
@@ -21,12 +36,7 @@
       <div class="moon moon_0">
         <div class="bird_0"></div>
       </div>
-      <div class="btn_box btn_box_0 ">
-        <div class="man man_0" :class="{'man_1':gender=='male'}" @click="confirmGender('male')"></div>
-        <div class="woman woman_0" :class="{'woman_1':gender=='female'}" @click="confirmGender('female')"></div>
-        <input v-model="userName" type="text" placeholder="请输入姓名" v-on:input="guessGender($event)">
-        <button @click="nextPage()">AI</button>
-      </div>
+      
 
     </div>
 
@@ -135,40 +145,11 @@
     justify-content: center;
   }
 
-  .radio_0 {
-    animation: radio 2.5s ease-out;
-    animation-iteration-count: infinite;
-  }
 
-  .bd {
-    width: 5px;
-    background: #ffffff;
-    margin-left: 90px;
-    height: 270px;
-  }
 
-  @keyframes bd {
-    0% {
-      height: 0;
-      opacity: 0.2;
-    }
-    100% {
-      height: 330px;
-      opacity: 1;
-    }
-  }
 
-  .bd_0 {
-    animation: bd 1s alternate forwards;
-    animation-iteration-count: 1;
-  }
 
-  .round_0 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 250px;
-  }
+
 
   .left-cloud {
     position: absolute;
@@ -269,23 +250,142 @@
     background-image: url('../assets/img/page_1/hill05@2x.png');
   }
 
+  .moon {
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    top: 65%;
+    border-radius: 0 0 0 100%;
+    background: #ffffff;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 10px 10px 5px #888888;
+  }
+
+  .bird_0 {
+    width: 69px;
+    height: 56px;
+    position: absolute;
+    top: 39%;
+    left: 14%;
+    background-image: url('../assets/img/page_0/bird01@2x.png');
+    background-size: 100% auto;
+  }
+
+  .moon_0 {
+    animation: moon 0.5s alternate forwards;
+    animation-iteration-count: 1;
+  }
+
+  @keyframes moon {
+    0% {
+      left: 50%;
+      top: 65%;
+      opacity: 0.2;
+      border-radius: 100%;
+    }
+    100% {
+      position: absolute;
+      top: 0;
+      left: 84%;
+      opacity: 1;
+      border-radius: 0 0 0 100%;
+    }
+  }
+
+
+/* ex-yeweiping001 */
+  .top_lamination{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+  }
+  .top_lamination .top_relative{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 201;
+  }
+  .top_lamination .top_relative .main_div{
+    position: absolute;
+    top:18%;
+    left: 0;
+    height: 48%;
+    width: 100%;
+  }
+  .top_lamination .top_relative .main_div .bd {
+    width: 5px;
+    background: #ffffff;
+    margin: 5% auto;
+    margin-bottom: 99px;
+    height: calc(95% - 99px);
+    z-index: 202;
+  }
+
+  @keyframes bd {
+    0% {
+      height: 25%;
+      opacity: 0.2;
+    }
+    100% {
+      height: calc(95% - 100px);
+      opacity: 1;
+    }
+  }
+
+  .top_lamination .top_relative .main_div .bd_0 {
+    animation: bd 1s alternate forwards;
+    animation-iteration-count: 1;
+  }
+
+  .top_lamination .top_relative .main_div .round_0 {
+    position: absolute;
+    top:0;
+    z-index: 203;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .top_lamination .top_relative .main_div .circle_0{
+    position: absolute;
+    top: 0;
+    z-index: 204;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .top_lamination .top_relative .main_div .radio_0 {
+    margin-left: -3%;
+    margin-top: -3%;
+    animation: radio 2.5s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  
   .btn_box {
     position: absolute;
-    top: 38%;
+    bottom: 0;
+    z-index: 204;
   }
 
   @keyframes btn_box {
     0% {
       opacity: 0.2;
-      top: 10%;
+      bottom: 55%;
     }
     100% {
-      top: 38%;
+      bottom: 0;
       opacity: 1;
     }
   }
 
   .btn_box_0 {
+    width: 8.4rem;
+    left: 50%;
+    transform: translateX(-50%);
     animation: btn_box 1s alternate forwards;
     animation-iteration-count: 1;
   }
@@ -374,49 +474,6 @@
     animation-delay: 1s;
   }
 
-  .moon {
-    position: absolute;
-    width: 240px;
-    height: 240px;
-    top: 65%;
-    border-radius: 0 0 0 100%;
-    background: #ffffff;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 10px 10px 5px #888888;
-  }
-
-  .bird_0 {
-    width: 69px;
-    height: 56px;
-    position: absolute;
-    top: 39%;
-    left: 14%;
-    background-image: url('../assets/img/page_0/bird01@2x.png');
-    background-size: 100% auto;
-  }
-
-  .moon_0 {
-    animation: moon 0.5s alternate forwards;
-    animation-iteration-count: 1;
-  }
-
-  @keyframes moon {
-    0% {
-      left: 50%;
-      top: 65%;
-      opacity: 0.2;
-      border-radius: 100%;
-    }
-    100% {
-      position: absolute;
-      top: 0;
-      left: 84%;
-      opacity: 1;
-      border-radius: 0 0 0 100%;
-    }
-  }
-
   @keyframes man_1 {
     0% {
       top: 48%;
@@ -444,5 +501,6 @@
   .woman_1 {
     animation: woman_1 0.1s forwards;
   }
+
 
 </style>
