@@ -1,0 +1,551 @@
+<template>
+  <div id="third-page">
+    <img class="bg-img" src="../assets/img/page_2/bg01.png"/>
+    <div class="content_box">
+      <!-- <ul class="circle_box">
+         <div class="round2" :class='"group_"+index.toString()' @click="circleSelected($event)" v-for="(item,index) in typeList" :key="index">
+           <div class="circle2" :class="'circle_'+index.toString()">{{item.name}}</div>
+           <div class="radio2" :class="'radio_'+index.toString()"></div>
+         </div>
+       </ul>-->
+      <div class="circle_box">
+        <div class="round" :class="'circle_'+index.toString()" v-for="(item,index) in keywordList" :key="index"
+             @click="kwSelect(item)">
+          <div class="circle" :class="{'is-selected':item.selected}">{{item.name}}</div>
+          <div class="radio" :class="'radio_'+index.toString()"></div>
+        </div>
+      </div>
+      <div class="left_darkhill"></div>
+      <div class="right_darkhill"></div>
+      <div class="left_lighthill"></div>
+      <div class="right_lighthill"></div>
+      <div class="bird-left"></div>
+      <div class="bird-right"></div>
+      <button class="ai-area" @click="nextPage()">AI</button>
+
+      <!--<router-link class="ai-area" :to="{path:'/fourthPage'}">
+          <div class="ai-btn">AI</div>
+      </router-link>-->
+    </div>
+
+  </div>
+</template>
+<script>
+  import * as types from '@/store/types'
+
+  export default {
+    name: 'thirsPage',
+    data(){
+      return {
+        selectKeywords: 0,
+        keywordList: [/*{
+         "id": 0,
+         "name": "一开心",
+         selected: false
+         }, {
+         "id": 1,
+         "name": "二节日",
+         selected: false
+
+         }, {
+         "id": 2,
+         "name": "三嘻嘻",
+         selected: false
+
+         }, {
+         "id": 3,
+         "name": "四惊天",
+         selected: false
+
+         }, {
+         "id": 4,
+         "name": "五动地",
+         selected: false
+
+         }, {
+         "id": 5,
+         "name": "六六六",
+         selected: false
+
+         }, {
+         "id": 6,
+         "name": "七爱慕",
+         selected: false
+
+         }, {
+         "id": 7,
+         "name": "八情人节",
+         selected: false
+
+         }, {
+         "id": 8,
+         "name": "九搞笑",
+         selected: false
+
+         }*/],
+         res:'',
+         selecteId:[]
+      }
+    },
+    created(){
+      this.getKeywordList();
+//            var res = sessionStorage.getItem('response');
+//            this.keywordList = res['keyword'];
+//            let themeId = this.$route.query.themeid;
+//            for (var i = 0, len = this.keywordList.length; i < len; i++) {
+//                this.keywordList[i]['selected'] = false
+//            }
+
+    },
+    methods: {
+      getKeywordList(){
+        // 发请求做诗请求，带参数name，gender，themeId
+        //{name: userName, themeId: themeId, gender: gender}
+        var model = this.$route.query;
+        this.$get(types.getKeyword, model).then((response => {
+          this.keywordList = response.data.KeywordList;
+          this.res = response;
+        }))
+      },
+      createSeletedID(keywordid){
+        if (this.selecteId.length <=3) {
+          console.log(keywordid);
+          var index = this.selecteId.indexOf(keywordid);
+          if (this.selecteId.indexOf(keywordid) > -1) {
+            // 删除keywordid
+            this.selecteId.splice(index,1)
+          } else{
+            this.selecteId.push(keywordid);
+            console.log(this.selecteId)
+          };
+        } else{
+          this.selecteId.pop();
+          console.log('en heng?')
+        }
+      },
+
+      // 此处需实现点击关键词改变样式
+      kwSelect(item){
+        this.selectKeywords = this.selectKeywords + (item.selected ? -1 : 1);
+        this.createSeletedID(item['id']);
+        this.$set(item, 'selected', !item.selected);
+        
+        if (this.selectKeywords > 3) {
+          alert('最多选择3个');
+          this.selectKeywords = this.selectKeywords + (item.selected ? -1 : 1);
+          this.createSeletedID(item['id'])
+          this.$set(item, 'selected', !item.selected);
+          return;
+        }
+      },
+
+      // 跳转第四页
+      nextPage(){
+        if (this.selectKeywords <= 0) {
+          alert('必须要选一个哟！');
+          return;
+        }
+        let model = this.$route.query;
+        var themeId = model['themeId'],
+            keywordIds = this.selecteId.join(','),
+            acrosticUid = this.res.data.acrosticUid;
+
+        var queryData = {themeId:themeId,
+                         keywordIds:keywordIds,
+                         acrosticUid:acrosticUid};
+
+        this.$router.push({path: '/fourthPage', query: queryData});
+        // 发送acrostic的请求 参数themeId,keywordIds,acrosticUid
+        // keyword用,拼接
+
+        // this.$get(types.getAcrostic, {themeId: themeId}).then(
+        //   (response => {
+        //     this.acrostic = response.acrostic;
+        //     this.blessings = response.blessings;
+        //   })
+        // )
+
+      }
+
+    },
+
+  }
+</script>
+<style scoped>
+  .bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .content_box {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .round {
+    width: 145px;
+    height: 145px;
+  }
+
+  .circle {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    line-height: 130px;
+    text-align: center;
+    font-size: 25px;
+    left: 1.5px;
+    top: 1.3px
+  }
+
+  .radio {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    left: -4px;
+    top: -134px;
+  }
+
+  /* 选中后的选中效果 */
+  .is-selected {
+    background: -webkit-radial-gradient(circle, #f52b56 80%, #fff); /* Safari 5.1 - 6.0 */
+    background: -o-radial-gradient(#f52b56 80%, #fff); /* Opera 11.6 - 12.0 */
+    background: -moz-radial-gradient(#f52b56 80%, #fff); /* Firefox 3.6 - 15 */
+    background: radial-gradient(#f52b56 80%, #fff); /* 标准的语法 */
+  }
+
+  /*九个圆圈定位*/
+  .round:nth-child(1) {
+    /*left: 150px;*/
+    margin-left: -75px;
+    top: 230px;
+  }
+
+  .round:nth-child(2) {
+    margin-left: 80px;
+    /*left: 310px;*/
+    top: 295px;
+  }
+
+  .round:nth-child(3) {
+    margin-left: 150px;
+    /*left: 280px;*/
+    top: 460px;
+  }
+
+  .round:nth-child(4) {
+    /*left: 150px;*/
+    margin-left: 70px;
+    top: 610px;
+  }
+
+  .round:nth-child(5) {
+    margin-left: -75px;
+    /*left: 310px;*/
+    top: 460px;
+  }
+
+  .round:nth-child(6) {
+    margin-left: -75px;
+    /*left: 310px;*/
+    top: 680px;
+  }
+
+  .round:nth-child(7) {
+    margin-left: -240px;
+    /*left: 310px;*/
+    top: 610px;
+  }
+
+  .round:nth-child(8) {
+    margin-left: -300px;
+    /*left: 310px;*/
+    top: 460px;
+  }
+
+  .round:nth-child(9) {
+    margin-left: -240px;
+    /*left: 310px;*/
+    top: 310px;
+  }
+
+  /* 五毛爆炸特效 */
+  .circle_0 {
+    animation: circle_effect_0 1.4s;
+  }
+
+  .circle_1 {
+    animation: circle_effect_1 0.5s;
+  }
+
+  .circle_2 {
+    animation: circle_effect_2 0.8s;
+  }
+
+  .circle_3 {
+    animation: circle_effect_3 1.1s;
+  }
+
+  .circle_5 {
+    animation: circle_effect_5 1.4s;
+  }
+
+  .circle_6 {
+    animation: circle_effect_6 0.8s;
+  }
+
+  .circle_7 {
+    animation: circle_effect_7 0.8s;
+  }
+
+  .circle_8 {
+    animation: circle_effect_8 1.1s;
+  }
+
+  /* 电波特效*/
+  .radio_0 {
+    animation: radio 1.5s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_1 {
+    animation: radio 2s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_2 {
+    animation: radio 2.5s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_3 {
+    animation: radio 3s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_4 {
+    animation: radio 4s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_5 {
+    animation: radio 1.5s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_6 {
+    animation: radio 2s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_7 {
+    animation: radio 1.5s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .radio_8 {
+    animation: radio 3s ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  /* 页面三，五毛爆炸特效 */
+  @keyframes circle_effect_0 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: -75px;
+      top: 230px
+    }
+  }
+
+  @keyframes circle_effect_1 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: 80px;
+      top: 295px
+    }
+  }
+
+  @keyframes circle_effect_2 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: 150px;
+      top: 460px
+    }
+  }
+
+  @keyframes circle_effect_3 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: 70px;
+      top: 610px
+    }
+  }
+
+  @keyframes circle_effect_5 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: -75px;
+      top: 680px
+    }
+  }
+
+  @keyframes circle_effect_6 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: -240px;
+      top: 610px
+    }
+  }
+
+  @keyframes circle_effect_7 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: -300px;
+      top: 460px
+    }
+  }
+
+  @keyframes circle_effect_8 {
+    from {
+      margin-left: -75px;
+      top: 460px;
+    }
+    to {
+      margin-left: -240px;
+      top: 310px
+    }
+  }
+
+  .left_darkhill {
+    position: absolute;
+    width: 247px;
+    height: 53px;
+    bottom: 270px;
+    margin-left: -255px;
+    background-image: url('../assets/img/page_0/hill02@2x.png');
+    background-size: 100% auto;
+  }
+
+  .right_darkhill {
+    position: absolute;
+    width: 232px;
+    height: 128px;
+    bottom: 200px;
+    margin-left: 255px;
+    background-image: url('../assets/img/page_0/hill01@2x.png');
+    background-size: 100% auto;
+  }
+
+  .left_lighthill {
+    position: absolute;
+    width: 177px;
+    height: 76px;
+    bottom: 340px;
+    margin-left: -180px;
+    background-image: url('../assets/img/page_0/hill03@2x.png');
+    background-size: 100% auto;
+  }
+
+  .right_lighthill {
+    position: absolute;
+    width: 120px;
+    height: 26px;
+    margin-left: 275px;
+    bottom: 380px;
+    background-image: url('../assets/img/page_0/hill04@2x.png');
+    background-size: 100% auto;
+  }
+
+  .left-cloud {
+    position: absolute;
+    width: 201px;
+    height: 74px;
+    margin-left: -230px;
+    bottom: 180px;
+    background-image: url('../assets/img/page_0/cloud_left@2x.png');
+    background-size: 100% auto;
+  }
+
+  .right-cloud {
+    /*display: none;*/
+    position: absolute;
+    width: 201px;
+    height: 74px;
+    margin-left: 252px;
+    bottom: 190px;
+    background-image: url('../assets/img/page_0/cloud_right@2x.png');
+    background-size: 100% auto;
+  }
+
+  .bird-left {
+    position: absolute;
+    width: 68px;
+    height: 61px;
+    bottom: 480px;
+    margin-left: -220px;
+    /*left: 7%;*/
+    background-image: url('../assets/img/page_1/bird02@2x.png');
+    background-size: 100% auto;
+  }
+
+  .bird-right {
+    position: absolute;
+    width: 69px;
+    height: 55px;
+    bottom: 420px;
+    margin-left: 220px;
+    /*left: 7%;*/
+    background-image: url('../assets/img/page_1/bird01@2x.png');
+    background-size: 100% auto;
+  }
+
+  .ai-area {
+    position: absolute;
+    width: 280px;
+    height: 100px;
+    background-color: rgb(93, 93, 198);
+    opacity: 0.9;
+    line-height: 100px;
+    border-radius: 20%;
+    top: 70%;
+    font-size: 0.8rem;
+  }
+
+  .ai-btn {
+    width: 100%;
+    position: relative;
+    color: aliceblue;
+    text-align: center;
+    line-height: 100px;
+    font-size: 50px;
+  }
+
+
+</style>

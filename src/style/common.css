@@ -1,0 +1,211 @@
+/*电波圆形*/
+.round {
+  position: absolute;
+  width: 186px;
+  height: 186px;
+  border: solid 6px rgba(255, 255, 255, 0.2);;
+  border-radius: 100%;
+  text-decoration: none;
+}
+
+/* 第三页的round */
+/*.round2 {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border: solid 6px rgba(255, 255, 255, 0.2);;
+  border-radius: 100%;
+  text-decoration: none;
+}*/
+
+.circle {
+  background: -webkit-radial-gradient(circle, #f52b56 45%, #fff); /* Safari 5.1 - 6.0 */
+  background: -o-radial-gradient(#f52b56 45%, #fff); /* Opera 11.6 - 12.0 */
+  background: -moz-radial-gradient(#f52b56 45%, #fff); /* Firefox 3.6 - 15 */
+  background: radial-gradient(#f52b56 45%, #fff); /* 标准的语法 */
+  border-radius: 100%;
+  width: 186px;
+  height: 186px;
+  line-height: 186px;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 43px;
+}
+
+/* 第三页的圆样式 */
+/*.circle2 {
+  background: -webkit-radial-gradient(circle, #f52b56 35%, #fff); !* Safari 5.1 - 6.0 *!
+  background: -o-radial-gradient(#f52b56 35%, #fff); !* Opera 11.6 - 12.0 *!
+  background: -moz-radial-gradient(#f52b56 35%, #fff); !* Firefox 3.6 - 15 *!
+  background: radial-gradient(#f52b56 35%, #fff); !* 标准的语法 *!
+  border-radius: 100%;
+  width: 130px;
+  height: 130px;
+  line-height: 130px;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 25px;
+  position: absolute;
+  z-index: 1000;
+}*/
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  width: 204px;
+  height: 204px;
+  left: -10px;
+  top: -10px;
+}
+
+/* 页面3的动效 */
+/*.radio2 {
+  position: absolute;
+  opacity: 0;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  width: 140px;
+  height: 140px;
+  left: -8px;
+  top: -8px;
+}*/
+
+.circle-selected {
+  color: #add8e6
+}
+
+@keyframes radio {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.4;
+  }
+  10% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  30% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  40% {
+    transform: scale(1.0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1.0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 0.0;
+  }
+  /* 90% {transform: scale(0.65);opacity: 0.3;} */
+  100% {
+    transform: scale(0.7);
+    opacity: 0.0;
+  }
+}
+
+
+/*!* 页面三动效 *!
+@keyframes radio2 {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.4;
+  }
+  10% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  30% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  40% {
+    transform: scale(1.0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1.0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 0.0;
+  }
+  !* 90% {transform: scale(0.65);opacity: 0.3;} *!
+  100% {
+    transform: scale(0.7);
+    opacity: 0.0;
+  }
+}*/
+
+
+/*第一页和第二页山云定位*/
+.left_darkhill {
+  position: absolute;
+  width: 247px;
+  height: 53px;
+  bottom: 270px;
+  margin-left: -255px;
+  /*background-image: url('../assets/img/page_0/hill02@2x.png');*/
+  background-size: 100% auto;
+}
+
+.right_darkhill {
+  position: absolute;
+  width: 232px;
+  height: 128px;
+  bottom: 200px;
+  margin-left: 255px;
+  /*background-image: url('../assets/img/page_0/hill01@2x.png');*/
+  background-size: 100% auto;
+}
+
+.left_lighthill {
+  position: absolute;
+  width: 177px;
+  height: 76px;
+  bottom: 340px;
+  margin-left: -180px;
+  /*background-image: url('../assets/img/page_0/hill03@2x.png');*/
+  background-size: 100% auto;
+}
+
+.right_lighthill {
+  position: absolute;
+  width: 120px;
+  height: 26px;
+  margin-left: 275px;
+  bottom: 380px;
+  /*background-image: url('../assets/img/page_0/hill04@2x.png');*/
+  background-size: 100% auto;
+}
