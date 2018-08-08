@@ -7,3 +7,4 @@
 .babelrc
 .editorconfig
 .postcssrc.js
+/dist/

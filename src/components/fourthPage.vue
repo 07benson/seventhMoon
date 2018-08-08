@@ -37,14 +37,13 @@
       <div class="box_middle">
         
         <div class="blessing_div">
+          <div class="blessing_item blessing_content">
+            {{ blessings }}
+          </div>
           <div class="blessing_item sign_content">
             <div class="sign_position">
              — AI作词&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
-           
-          </div>
-          <div class="blessing_item blessing_content">
-            {{ blessings }}
           </div>
         </div>
       </div>
@@ -177,16 +176,19 @@
 
   .content_box .box_middle .blessing_div{
     height: 100%;
-    width: 58%;
+    width: 100%;
     float: right;
   }
   .content_box .box_middle .blessing_div .blessing_content{
+    float: right;
+    margin-right: 1rem;
     height: 4.3rem;
     writing-mode: vertical-rl;
     writing-mode: tb-rl;
     line-height: 0.7rem;
   }
   .content_box .box_middle .blessing_div .sign_content{
+    float: right;
     position: relative;
     margin-right: 1rem;
     height: 4.3rem;
@@ -194,8 +196,7 @@
     writing-mode: tb-rl;
   }
   .content_box .box_middle .blessing_div .sign_position{
-    position: absolute;
-    bottom: 0;
+    text-align: right;
   }
   .content_box .box_bottom{
     position: absolute;
