@@ -51,16 +51,43 @@
       // 获取用户输入的姓名
       guessGender(e){
         var self = this;
-        console.log(this.userName);
         // 要判断输入两个字以上再发请求，只支持中文
-        
+        var ischn = this.isChn(this.userName),
+            len = this.strLen(this.userName);
+
+        if (len>=4 && ischn) {
+          this.$get(types.getGender, {name: this.userName}).then((response => {
+            let genderRes = response.data.gender;
+            self.gender = genderRes;
+          }))
+        } else {
+          return
+        }
+      },
+
+      strLen(str){
+        var len = 0;
+        for (var i=0; i<str.length; i++) { 
+        var c = str.charCodeAt(i); 
+        //单字节加1 
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) { 
+          len++; 
+          } else { 
+            len+=2; 
+            } 
+          } 
+        return len;
+      },
 
 
-        this.$get(types.getGender, {name: this.userName}).then((response => {
-          console.log(response.data.gender);
-          let genderRes = response.data.gender;
-          self.gender = genderRes;
-        }))
+      // 中文判断
+      isChn(str){
+          var reg=/^[\u3220-\uFA29]+$/;
+          if (!reg.test(str)){
+            return false ;
+          } else {
+            return true ;
+          }
       },
 
       // 3、获取用户选择的性别值
