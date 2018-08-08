@@ -55,11 +55,13 @@
         var ischn = this.isChn(this.userName),
             len = this.strLen(this.userName);
 
-        if (len>=4 && ischn) {
+        if (len>=4 && ischn && len<=8) {
           this.$get(types.getGender, {name: this.userName}).then((response => {
             let genderRes = response.data.gender;
             self.gender = genderRes;
           }))
+        } else if (len>8) {
+          this.userName = this.userName.substring(0,4);
         } else {
           return
         }
@@ -100,8 +102,13 @@
         var themeId = this.$route.query.id;
         let userName = this.userName;
         let gender = this.gender;
-        this.$router.push({path: '/thirdPage', query: {name: userName, themeId: themeId, gender: gender}});
 
+        if (!this.isChn(this.userName) || this.strLen(this.userName)<4) {
+          alert('请输入2～4个中文哟')
+        } else {
+          this.$router.push({path: '/thirdPage', query: {name: userName, themeId: themeId, gender: gender}});
+        }
+        
       }
 
     },

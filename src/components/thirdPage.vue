@@ -109,7 +109,6 @@
       },
       createSeletedID(keywordid){
         if (this.selecteId.length <=3) {
-          console.log(keywordid);
           var index = this.selecteId.indexOf(keywordid);
           if (this.selecteId.indexOf(keywordid) > -1) {
             // 删除keywordid
@@ -120,7 +119,6 @@
           };
         } else{
           this.selecteId.pop();
-          console.log('en heng?')
         }
       },
 
