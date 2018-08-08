@@ -2,18 +2,13 @@
   <div id="third-page">
     <img class="bg-img" src="../assets/img/page_2/bg01.png"/>
     <div class="content_box">
-      <!-- <ul class="circle_box">
-         <div class="round2" :class='"group_"+index.toString()' @click="circleSelected($event)" v-for="(item,index) in typeList" :key="index">
-           <div class="circle2" :class="'circle_'+index.toString()">{{item.name}}</div>
-           <div class="radio2" :class="'radio_'+index.toString()"></div>
-         </div>
-       </ul>-->
       <div class="circle_box">
         <div class="round" :class="'circle_'+index.toString()" v-for="(item,index) in keywordList" :key="index"
              @click="kwSelect(item)">
           <div class="circle" :class="{'is-selected':item.selected}">{{item.name}}</div>
           <div class="radio" :class="'radio_'+index.toString()"></div>
         </div>
+        <button class="ai-area" @click="nextPage()">AI</button>
       </div>
       <div class="left_darkhill"></div>
       <div class="right_darkhill"></div>
@@ -21,11 +16,7 @@
       <div class="right_lighthill"></div>
       <div class="bird-left"></div>
       <div class="bird-right"></div>
-      <button class="ai-area" @click="nextPage()">AI</button>
-
-      <!--<router-link class="ai-area" :to="{path:'/fourthPage'}">
-          <div class="ai-btn">AI</div>
-      </router-link>-->
+      <!-- <button class="ai-area" @click="nextPage()">AI</button> -->
     </div>
 
   </div>
@@ -38,13 +29,21 @@
     data(){
       return {
         selectKeywords: 0,
-        keywordList: [],
+        keywordList: [{'id':1,"name":'零'},
+         {'id':1,"name":'一'},
+         {'id':1,"name":'二'},
+         {'id':1,"name":'三'},
+         {'id':1,"name":'四'},
+         {'id':1,"name":'五'},
+         {'id':1,"name":'六'},
+         {'id':1,"name":'七'},
+         {'id':1,"name":'八'}],
          res:'',
          selecteId:[]
       }
     },
     created(){
-      this.getKeywordList();
+      // this.getKeywordList();
 
     },
     methods: {
@@ -102,16 +101,7 @@
                          acrosticUid:acrosticUid};
 
         this.$router.push({path: '/fourthPage', query: queryData});
-        // 发送acrostic的请求 参数themeId,keywordIds,acrosticUid
-        // keyword用,拼接
-
-        // this.$get(types.getAcrostic, {themeId: themeId}).then(
-        //   (response => {
-        //     this.acrostic = response.acrostic;
-        //     this.blessings = response.blessings;
-        //   })
-        // )
-
+        
       }
 
     },
@@ -133,11 +123,21 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    z-index: 1;
+  }
+
+  .circle_box {
+    position: relative;
+    z-index: 400;
+    width: 100%;
+    height: 100px;
+    left: 0;
   }
 
   .round {
     width: 145px;
     height: 145px;
+    position: relative;
   }
 
   .circle {
@@ -148,7 +148,8 @@
     text-align: center;
     font-size: 25px;
     left: 1.5px;
-    top: 1.3px
+    top: 1.3px;
+    z-index: 500;
   }
 
   .radio {
@@ -224,35 +225,39 @@
 
   /* 五毛爆炸特效 */
   .circle_0 {
-    animation: circle_effect_0 1.4s;
+    animation: circle_effect_0 0.7s forwards;
   }
 
   .circle_1 {
-    animation: circle_effect_1 0.5s;
+    animation: circle_effect_1 1.0s forwards;
   }
 
   .circle_2 {
-    animation: circle_effect_2 0.8s;
+    animation: circle_effect_2 0.7s forwards;
   }
 
   .circle_3 {
-    animation: circle_effect_3 1.1s;
+    animation: circle_effect_3 1.0s forwards;
+  }
+
+  .circle_4 {
+    animation: circle_effect_4 0.1s forwards;
   }
 
   .circle_5 {
-    animation: circle_effect_5 1.4s;
+    animation: circle_effect_5 0.7s forwards;
   }
 
   .circle_6 {
-    animation: circle_effect_6 0.8s;
+    animation: circle_effect_6 1.0s forwards;
   }
 
   .circle_7 {
-    animation: circle_effect_7 0.8s;
+    animation: circle_effect_7 0.7s forwards;
   }
 
   .circle_8 {
-    animation: circle_effect_8 1.1s;
+    animation: circle_effect_8 1.0s forwards;
   }
 
   /* 电波特效*/
@@ -304,89 +309,100 @@
   /* 页面三，五毛爆炸特效 */
   @keyframes circle_effect_0 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: 450%;
     }
     to {
-      margin-left: -75px;
-      top: 230px
+      margin-left:40%;
+      top: 222%
     }
   }
 
   @keyframes circle_effect_1 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: 280%;
     }
     to {
-      margin-left: 80px;
-      top: 295px
+      margin-left: 61%;
+      top: 136%
     }
   }
 
   @keyframes circle_effect_2 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: 141%;
     }
     to {
-      margin-left: 150px;
-      top: 460px
+      margin-left: 70%;
+      top: 140%
     }
   }
 
   @keyframes circle_effect_3 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: -5%;
     }
     to {
-      margin-left: 70px;
-      top: 610px
+      margin-left: 61%;
+      top: 142%
+    }
+  }
+
+  @keyframes circle_effect_4 {
+    from {
+      margin-left: 40%;
+      top: -150%;
+    }
+    to {
+      margin-left: 40%;
+      top: -150%
     }
   }
 
   @keyframes circle_effect_5 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: -290%;
     }
     to {
-      margin-left: -75px;
-      top: 680px
+      margin-left: 40%;
+      top: -100%
     }
   }
 
   @keyframes circle_effect_6 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: -440%;
     }
     to {
-      margin-left: -240px;
-      top: 610px
+      margin-left: 19%;
+      top: -292%
     }
   }
 
   @keyframes circle_effect_7 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: -584%;
     }
     to {
-      margin-left: -300px;
-      top: 460px
+      margin-left: 10%;
+      top: -584%
     }
   }
 
   @keyframes circle_effect_8 {
     from {
-      margin-left: -75px;
-      top: 460px;
+      margin-left: 40%;
+      top: -728%;
     }
     to {
-      margin-left: -240px;
-      top: 310px
+      margin-left: 19%;
+      top: -883%
     }
   }
 
@@ -398,6 +414,7 @@
     margin-left: -255px;
     background-image: url('../assets/img/page_0/hill02@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .right_darkhill {
@@ -408,6 +425,7 @@
     margin-left: 255px;
     background-image: url('../assets/img/page_0/hill01@2x.png');
     background-size: 100% auto;
+    z-index: 21;
   }
 
   .left_lighthill {
@@ -418,6 +436,7 @@
     margin-left: -180px;
     background-image: url('../assets/img/page_0/hill03@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .right_lighthill {
@@ -428,6 +447,7 @@
     bottom: 380px;
     background-image: url('../assets/img/page_0/hill04@2x.png');
     background-size: 100% auto;
+    z-index: 21;
   }
 
   .left-cloud {
@@ -438,6 +458,7 @@
     bottom: 180px;
     background-image: url('../assets/img/page_0/cloud_left@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .right-cloud {
@@ -449,6 +470,7 @@
     bottom: 190px;
     background-image: url('../assets/img/page_0/cloud_right@2x.png');
     background-size: 100% auto;
+    z-index: 21;
   }
 
   .bird-left {
@@ -460,6 +482,7 @@
     /*left: 7%;*/
     background-image: url('../assets/img/page_1/bird02@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .bird-right {
@@ -471,6 +494,7 @@
     /*left: 7%;*/
     background-image: url('../assets/img/page_1/bird01@2x.png');
     background-size: 100% auto;
+    z-index: 21;
   }
 
   .ai-area {
@@ -482,13 +506,15 @@
     opacity: 0.9;
     line-height: 100px;
     border-radius: 20%;
-    top: 70%;
+    top: 950%;
+    margin-left: 30%;
     font-size: 0.8rem;
+    z-index: 100;
   }
 
   .ai-btn {
     width: 100%;
-    position: relative;
+    position: absolute;
     color: aliceblue;
     text-align: center;
     line-height: 100px;

@@ -64,6 +64,7 @@
     position: relative;
     left: 2px;
     top: 2.2px;
+    z-index: 500;
   }
 
   .radio {
@@ -91,6 +92,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    z-index: 1;
   }
 
   /*五个圆圈定位*/
@@ -161,6 +163,7 @@
     bottom: 210px;
     background-image: url('../assets/img/page_0/moon@2x.png');
     background-size: 100% auto;
+    z-index: 10;
   }
 
   .bridge {
@@ -170,6 +173,7 @@
     height: 108px;
     background-image: url('../assets/img/page_0/bird_bridge@2x.png');
     background-size: 100% auto;
+    z-index: 15;
   }
 
   .bridge-shadow {
@@ -179,6 +183,7 @@
     height: 108px;
     background-image: url('../assets/img/page_0/bird_bridge_shadow@2x.png');
     background-size: 100% auto;
+    z-index: 15;
   }
 
   .man {
@@ -190,6 +195,7 @@
     height: 216px;
     background-image: url('../assets/img/page_0/man@2x.png');
     background-size: 100% auto;
+    z-index: 30;
   }
 
   .girl {
@@ -200,6 +206,7 @@
     height: 205px;
     background-image: url('../assets/img/page_0/girl@2x.png');
     background-size: 100% auto;
+    z-index: 30;
   }
 
   .left-cloud {
@@ -210,6 +217,7 @@
     bottom: 180px;
     background-image: url('../assets/img/page_0/cloud_left@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .right-cloud {
@@ -221,6 +229,7 @@
     bottom: 190px;
     background-image: url('../assets/img/page_0/cloud_right@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .bird-left {
@@ -232,6 +241,7 @@
     /*left: 7%;*/
     background-image: url('../assets/img/page_1/bird02@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .bird-right {
@@ -243,6 +253,7 @@
     /*left: 7%;*/
     background-image: url('../assets/img/page_1/bird01@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .bottom-cloud1 {
@@ -253,6 +264,7 @@
     height: 51px;
     background-image: url('../assets/img/page_0/button01@2x.png');
     background-size: 100% auto;
+    z-index: 20;
   }
 
   .bottom-cloud2 {
@@ -263,6 +275,7 @@
     height: 63px;
     background-image: url('../assets/img/page_0/button02@2x.png');
     background-size: 100% auto;
+    z-index: 15;
   }
 
   .left_darkhill {
