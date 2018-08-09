@@ -29,21 +29,13 @@
     data(){
       return {
         selectKeywords: 0,
-        keywordList: [{'id':1,"name":'零'},
-         {'id':1,"name":'一'},
-         {'id':1,"name":'二'},
-         {'id':1,"name":'三'},
-         {'id':1,"name":'四'},
-         {'id':1,"name":'五'},
-         {'id':1,"name":'六'},
-         {'id':1,"name":'七'},
-         {'id':1,"name":'八'}],
-         res:'',
-         selecteId:[]
+        keywordList: [],
+        res:'',
+        selecteId:[]
       }
     },
     created(){
-      // this.getKeywordList();
+      this.getKeywordList();
 
     },
     methods: {
