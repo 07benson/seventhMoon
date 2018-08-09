@@ -65,6 +65,8 @@
     left: 2px;
     top: 2.2px;
     z-index: 500;
+    font-size: 0.45rem;
+    letter-spacing:0.04rem;
   }
 
   .radio {
