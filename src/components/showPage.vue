@@ -232,7 +232,7 @@
         acrostic_item_2: "",
         acrostic_item_3: "",
         blessings: "",
-        themeId: 5
+        themeId: -1
       }
     },
     created(){
@@ -246,6 +246,7 @@
         var model = this.$route.query;
         this.$get(types.getPoem, model).then((response => {
           this.poemUid = response.data.poemUid;
+          this.themeId = response.data.themeId;
           this.acrostic_item_0 = response.data.acrostic[0];
           this.acrostic_item_1 = response.data.acrostic[1];
           this.acrostic_item_2 = response.data.acrostic[2];
@@ -399,7 +400,7 @@
   }
 
 
-
+/* ex-yeweiping001 */
 .lamination_bg_element{
   position: absolute;
   left: 0;
