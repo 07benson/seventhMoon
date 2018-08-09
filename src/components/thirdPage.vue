@@ -5,7 +5,15 @@
       <div class="circle_box">
         <div class="round" :class="'circle_'+index.toString()" v-for="(item,index) in keywordList" :key="index"
              @click="kwSelect(item)">
-          <div class="circle" :class="{'is-selected':item.selected}">{{item.name}}</div>
+          <div class="circle" :class="{'is-selected':item.selected}">
+            
+            <div v-show="item.name.length < 4" class="keyword_text">
+              {{item.name}}
+            </div>
+            <div v-show="item.name.length == 4" class="keyword_text_4">
+               {{item.name}}
+            </div>
+          </div>
           <div class="radio" :class="'radio_'+index.toString()"></div>
         </div>
         <button class="ai-area" @click="nextPage()">AI</button>
@@ -30,13 +38,21 @@
       return {
         selectKeywords: 0,
         keywordList: [],
+<<<<<<< HEAD
         res:'',
         selecteId:[]
+=======
+         res:'',
+         selecteId:[]
+>>>>>>> b93b403bcc7ea566c78927e11176ffb7cadbd7ef
       }
     },
     created(){
       this.getKeywordList();
+<<<<<<< HEAD
 
+=======
+>>>>>>> b93b403bcc7ea566c78927e11176ffb7cadbd7ef
     },
     methods: {
       getKeywordList(){
@@ -145,11 +161,10 @@
   }
 
   .radio {
-    position: relative;
     width: 140px;
     height: 140px;
-    left: -4px;
-    top: -134px;
+    left: -3%;
+    top: -3%;
   }
 
   /* 选中后的选中效果 */
@@ -513,5 +528,20 @@
     font-size: 50px;
   }
 
+/* ex-yeweiping001 */
+  .keyword_text_4{
+    position: absolute;
+    font-size:0.33rem;
+    line-height: 0.43rem; 
+    letter-spacing:0.05rem;
+    height: 0.86rem;
+    width: 0.86rem;
+    top: calc(50% - 0.43rem);
+    left: calc(50% - 0.38rem);
+  }
+  .keyword_text{
+    font-size:0.33rem;
+    letter-spacing:0.05rem;
+  }
 
 </style>
