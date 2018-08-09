@@ -38,21 +38,12 @@
       return {
         selectKeywords: 0,
         keywordList: [],
-<<<<<<< HEAD
-        res:'',
-        selecteId:[]
-=======
          res:'',
          selecteId:[]
->>>>>>> b93b403bcc7ea566c78927e11176ffb7cadbd7ef
       }
     },
     created(){
       this.getKeywordList();
-<<<<<<< HEAD
-
-=======
->>>>>>> b93b403bcc7ea566c78927e11176ffb7cadbd7ef
     },
     methods: {
       getKeywordList(){
