@@ -4,6 +4,7 @@ import firstPage from '@/components/firstPage'
 import secondPage from '@/components/secondPage'
 import thirdPage from '@/components/thirdPage'
 import fourthPage from '@/components/fourthPage'
+import showPage from '@/components/showPage'
 
 Vue.use(Router);
 
@@ -32,6 +33,11 @@ export default new Router({
       path: '/fourthPage',
       name: 'fourthPage',
       component: fourthPage
+    },
+    {
+      path: '/showPage',
+      name: 'showPage',
+      component: showPage
     }
   ]
 })

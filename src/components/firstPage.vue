@@ -68,9 +68,8 @@
   }
 
   .radio {
-    position: relative;
-    left: -5px;
-    top: -195px
+    left: -3%;
+    top: -3%;
   }
 
   .round {
