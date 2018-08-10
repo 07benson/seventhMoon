@@ -44,11 +44,10 @@
           </div>
         </div>
       </div>
-      <!--
+      
       <div  class="box_bottom">
-        <div class="send_btn">发送给Ta</div>
+        <div class="send_btn" @click="doShare()">发送给Ta</div>
       </div>
-      -->
       <div class="edit_btn" @click="editWindow()"></div>
     </div>
 
@@ -318,7 +317,11 @@
       },
 
       editWindow(){
-        this.show = 'show';
+        alert("正在开发中");
+        //this.show = 'show';
+      },
+      doShare(){
+        alert("期待与快乐平安对接");
       },
 
       strLen(str){
