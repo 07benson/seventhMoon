@@ -505,16 +505,16 @@
   .content_box .edit_btn{
     position: fixed;
     display: block;
-    right: 0;
-    bottom: 35%;
-    width: 101px;
+    left: -15px;;
+    bottom: 42%;
+    width: 114px;
     height: 114px;
     background-image: url("../assets/img/page_4/edit_btn_off.png");
-    background-size: 101px 114px;
+    background-size: 114px 114px;
   }
   .content_box .edit_btn:active{
     background-image: url("../assets/img/page_4/edit_btn_on.png");
-    background-size: 104px 114px;
+    background-size: 114px 114px;
   }
 
   .edit_area{
