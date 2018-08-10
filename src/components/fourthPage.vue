@@ -334,13 +334,13 @@
     position: absolute;
     top: 0%;
     margin-left: 0%;
-    background-color: #ffffff;
+    background-color:rgba(249, 249, 249,1);
     z-index: 5000;
     display: none
   }
 
   .edit_area .edit_input{
-    background-color:rgb(237, 237, 237);
+    background-color:rgba(255, 255, 255,1);
     position: absolute;
     margin-left: 18%;
     top: 0%;
@@ -349,19 +349,20 @@
     height: 5%;
     font-size: 20pt;
     width: 64%;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    font-family: 华文行楷;
+    border: 1px,rgba(222, 222, 222, 1)
   }
 
   .edit_area .edit_blessing{
-    background-color: rgb(237, 237, 237);
+    background-color:rgba(255, 255, 255,1);
     width: 78%;
     height: 130pt;
     position: absolute;
     margin-left: 11%;
     top: 200pt;
     font-size: 13pt;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    border: 0;
+    font-family:华文行楷;
+    border: 1px,rgba(222, 222, 222, 1)
   }
 
   .showing{
