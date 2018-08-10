@@ -160,10 +160,10 @@
 
   /* 选中后的选中效果 */
   .is-selected {
-    background: -webkit-radial-gradient(circle, #f52b56 80%, #fff); /* Safari 5.1 - 6.0 */
-    background: -o-radial-gradient(#f52b56 80%, #fff); /* Opera 11.6 - 12.0 */
-    background: -moz-radial-gradient(#f52b56 80%, #fff); /* Firefox 3.6 - 15 */
-    background: radial-gradient(#f52b56 80%, #fff); /* 标准的语法 */
+    background: -webkit-radial-gradient(circle,rgb(235, 63, 86) 50%, rgb(246, 204, 213)); /* Safari 5.1 - 6.0 */
+    background: -o-radial-gradient(circle,rgb(235, 63, 86) 50%, rgb(246, 204, 213)); /* Opera 11.6 - 12.0 */
+    background: -moz-radial-gradient(circle,rgb(235, 63, 86) 50%, rgb(246, 204, 213)); /* Firefox 3.6 - 15 */
+    background: radial-gradient(circle,rgb(235, 63, 86) 50%, rgb(246, 204, 213)); /* 标准的语法 */
   }
 
   /*九个圆圈定位*/

@@ -19,10 +19,10 @@
 }*/
 
 .circle {
-  background: -webkit-radial-gradient(circle, #f52b56 45%, #fff); /* Safari 5.1 - 6.0 */
-  background: -o-radial-gradient(#f52b56 45%, #fff); /* Opera 11.6 - 12.0 */
-  background: -moz-radial-gradient(#f52b56 45%, #fff); /* Firefox 3.6 - 15 */
-  background: radial-gradient(#f52b56 45%, #fff); /* 标准的语法 */
+  background: -webkit-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240, 240, 240)); /* Safari 5.1 - 6.0 */
+  background: -o-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* Opera 11.6 - 12.0 */
+  background: -moz-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* Firefox 3.6 - 15 */
+  background: radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* 标准的语法 */
   border-radius: 100%;
   width: 186px;
   height: 186px;
