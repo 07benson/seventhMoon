@@ -16,7 +16,7 @@
           </div>
           <div class="radio" :class="'radio_'+index.toString()"></div>
         </div>
-        <button class="ai-area" @click="nextPage()">AI</button>
+        <button class="ai-area" @click="nextPage()">AI Go</button>
       </div>
       <div class="left_darkhill"></div>
       <div class="right_darkhill"></div>
@@ -76,7 +76,7 @@
         this.$set(item, 'selected', !item.selected);
         
         if (this.selectKeywords > 3) {
-          alert('最多选择3个');
+          alert('请选1～3个祝福球哟！');
           this.selectKeywords = this.selectKeywords + (item.selected ? -1 : 1);
           this.createSeletedID(item['id'])
           this.$set(item, 'selected', !item.selected);
@@ -87,7 +87,7 @@
       // 跳转第四页
       nextPage(){
         if (this.selectKeywords <= 0) {
-          alert('必须要选一个哟！');
+          alert('请选1～3个祝福球哟！');
           return;
         }
         let model = this.$route.query;
@@ -140,6 +140,10 @@
   }
 
   .circle {
+    background: -webkit-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240, 240, 240)); /* Safari 5.1 - 6.0 */
+    background: -o-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* Opera 11.6 - 12.0 */
+    background: -moz-radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* Firefox 3.6 - 15 */
+    background: radial-gradient(circle,rgb(232,136,151) 55%, rgb(240,240,240)); /* 标准的语法 */
     position: relative;
     width: 130px;
     height: 130px;

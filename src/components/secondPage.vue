@@ -14,8 +14,8 @@
             <div class="btn_box btn_box_0 ">
               <div class="man man_0" :class="{'man_1':gender=='male'}" @click="confirmGender('male')"></div>
               <div class="woman woman_0" :class="{'woman_1':gender=='female'}" @click="confirmGender('female')"></div>
-              <input v-model="userName" type="text" placeholder="请输入姓名" v-on:input="guessGender($event)">
-              <button @click="nextPage()">AI</button>
+              <input v-model="userName" type="text" placeholder="Ta的姓名或昵称" v-on:input="guessGender($event)">
+              <button @click="nextPage()">AI Go</button>
             </div>
           </div>
           
@@ -410,12 +410,13 @@
     background: linear-gradient(rgb(88, 145, 251), rgb(66, 65, 167)); /* 标准的语法 */
     height: 100px;
     border-radius: 14px 14px 14px 14px;
-    padding: 17px 58px;
+    padding: 0.22rem 0.5rem;
     margin: -10px;
     font-size: 30px;
     text-align: center;
     color: #ffffff;
     outline: none;
+
   }
 
   .btn_box .man {
