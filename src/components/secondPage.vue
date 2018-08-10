@@ -116,7 +116,7 @@
         if (!this.isChn(this.userName) || this.strLen(this.userName)<4) {
           alert('请输入2～4个中文哟')
         } else {
-          this.$router.push({path: '/thirdPage', query: {name: userName, themeId: themeId, gender: gender}});
+          this.$router.push({path: '/thirdPage?rd='+Math.random(), query: {name: userName, themeId: themeId, gender: gender}});
         }
         
       }

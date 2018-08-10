@@ -44,7 +44,7 @@
         var self = this;
         self.circleActive = true;
         setTimeout(function () {
-          self.$router.push({path: '/secondPage', query: item})
+          self.$router.push({path: '/secondPage?rd='+Math.random(), query: item})
 
         }, 1000);
       },

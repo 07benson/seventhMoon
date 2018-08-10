@@ -99,7 +99,7 @@
                          keywordIds:keywordIds,
                          acrosticUid:acrosticUid};
 
-        this.$router.push({path: '/fourthPage', query: queryData});
+        this.$router.push({path: '/fourthPage?rd='+Math.random(), query: queryData});
         
       }
 
