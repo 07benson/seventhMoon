@@ -310,15 +310,15 @@
         } else {
           var cur_content = this.acrostic_item[e];
           var len = this.strLen(cur_content);
-          if (len==0) {
+          if (len<=0) {
             this.acrostic_item[e] = JSON.parse(sessionStorage.getItem('poem'))[e];
           } 
         }
       },
 
       editWindow(){
-        alert("正在开发中");
-        //this.show = 'show';
+        // alert("正在开发中");
+        this.show = 'show';
       },
       doShare(){
         alert("期待与快乐平安对接");
@@ -512,9 +512,9 @@
     margin-left: 18%;
     top: 0%;
     text-align: center;
-    line-height: 25pt;
-    height: 5%;
-    font-size: 20pt;
+    line-height: 1.0rem;
+    height: 1.0rem;
+    font-size: 0.678rem;
     width: 64%;
     font-family: 华文行楷;
     border: 1px,rgba(222, 222, 222, 1)
@@ -523,11 +523,11 @@
   .edit_area .edit_blessing{
     background-color:rgba(255, 255, 255,1);
     width: 78%;
-    height: 130pt;
+    height: 4.6rem;
     position: absolute;
     margin-left: 11%;
-    top: 200pt;
-    font-size: 13pt;
+    top: 5.9rem;
+    font-size: 0.46rem;
     font-family:华文行楷;
     border: 1px,rgba(222, 222, 222, 1)
   }
@@ -537,43 +537,43 @@
   }
 
   .edit_area .edit_table_0{
-    top: 50pt;
+    top: 1.0rem;
   }
 
   .edit_area .edit_table_1{
-    top: 85pt;
+    top: 2.1rem;
   }
 
   .edit_area .edit_table_2{
-    top: 120pt;
+    top: 3.2rem;
   }
 
   .edit_area .edit_table_3{
-    top: 155pt;
+    top: 4.3rem;
   }
 
   .edit_area .confirm_btn{
-    top: 380pt;
+    top: 11.5rem;
     background-color: rgb(86, 136, 222);
     color: rgb(255, 255, 255);
     position: absolute;
     width: 70%;
     margin-left: 15%;
-    font-size: 18pt;
-    height: 44pt;
-    line-height: 44pt
+    font-size: 0.7rem;
+    height: 1.5rem;
+    line-height: 1.5rem
   }
 
   .edit_area .cancel_btn{
-    top: 430pt;
+    top: 13.5rem;
     background-color: rgb(237, 237, 237);
     color: rgb(82, 82, 82);
     position: absolute;
     width: 70%;
     margin-left: 15%;
-    font-size: 18pt;
-    height: 44pt;
-    line-height: 44pt
+    font-size: 0.7rem;
+    height: 1.5rem;
+    line-height: 1.5rem
   }
 
 /* ex-yeweiping001 */
