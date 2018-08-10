@@ -339,9 +339,32 @@
       },
 
       confirmEdit(){
-        this.show = 'hide';
-        sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
-        sessionStorage.setItem('blessing',this.blessings);
+        
+        
+
+        var poemUid = this.poemUid;
+        var acrostic = this.acrostic_item;
+        var blessing = this.blessings;
+
+        var data = new Array();
+        data[0] = poemUid;
+        data[1] = acrostic;
+        data[2] = blessing;
+        
+        //console.log("data="+JSON.stringify(data));
+        this.$post(types.postEdit, 
+          {
+            'data':JSON.stringify(data),
+            //'acrosticJson':JSON.stringify(acrostic),
+            //'blessing':blessing,
+          }
+        ).then((response => {
+          console.log(response);
+          alert("保存成功");
+          this.show = 'hide';
+          sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
+          sessionStorage.setItem('blessing',this.blessings);
+        }))
       },
 
       cancelEdit(){
