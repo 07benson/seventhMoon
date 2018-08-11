@@ -65,6 +65,37 @@
       <button class="cancel_btn" @click="cancelEdit()">取消</button>
     </div>
 
+    <div class="query_div">
+      <div class="um_input_box">
+        <div class="center_div">
+          <div class="box_top">请输入Ta的姓名/UM号</div>
+          <div class="box_center"><input type="text"></div>
+          <div class="box_msg">找不到Ta，您可能输错了哦</div>
+          <div class="box_bottom">
+            <button >取消</button>
+            <button class="confirm">确认</button>
+          </div>
+        </div>
+      </div>
+      <div class="um_list_box">
+        <div class="query_content_div">
+          搜索“<span class="query_content">叶伟平</span>”
+        </div>
+        <div class="query_list">
+          <div class="result_item">
+            <div>
+              <span class="um_name">叶伟平</span>
+              <span class="um_account">ex-yeweiping001</span>
+              <span class="um_sex">男</span>
+            </div>
+            <div>
+              <span class="um_department">智能语言技术组</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="lamination_bg_element">
       <template v-if="this.themeId == 0">
         <div class="theme_0_posiction">
@@ -1185,5 +1216,91 @@
   max-width: 50vh;
 }
 
+
+/*----------------------------------     um查询        ---------------------------------*/
+.query_div {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background:#5a96e2;
+  z-index: 4000;
+}
+.query_div .um_input_box{
+  position: absolute;
+  width: 100%;
+  
+  bottom: 25%;
+  margin: 0 auto;
+  z-index: 4001;
+}
+.query_div .um_input_box .center_div{
+  color: #000000;
+  height: 100%;
+  width: 8rem;
+  margin: 0 auto;
+  border: 1px solid #333333;
+  border-radius: 0.2rem;
+  background: #ffffff;
+}
+.query_div .um_input_box .center_div .box_top{
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+}
+.query_div .um_input_box .center_div .box_center{
+  height: 1.2rem;
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+}
+.query_div .um_input_box .center_div .box_center input{
+  border: 1px solid #333333;
+  height: 1rem;
+  width: 88%;
+}
+.query_div .um_input_box .center_div .box_msg{
+  font-size: 0.4rem;
+  text-align: center;
+  line-height: 0.6rem;
+  margin-bottom: 0.1rem;
+}
+.query_div .um_input_box .center_div .box_bottom{
+  height: 1.3rem;
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+  border-top: 1px solid #333333;
+}
+.query_div .um_input_box .center_div .box_bottom button{
+  height: 100%;
+  width: 49%;
+}
+.query_div .um_input_box .center_div .box_bottom .confirm{
+  border-left:1px solid #333333;
+}
+.query_div .um_list_box{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  z-index: 4002;
+}
+
+.query_div .um_list_box .query_content_div{
+  padding: 0.2rem 0.3rem 0.1rem 0.3rem;
+  height: 1.5rem;
+  font-size: 0.6rem;
+  line-height: 1.5rem;
+  background: #e4e4e4;
+}
+.query_div .um_list_box .query_list .result_item{
+  font-size: 0.36rem;
+  line-height: 0.5rem;
+  height: 2rem;
+  border-bottom: 1px solid #9b9b9b;
+  padding: 0.4rem 0.4rem;
+}
 
 </style>
