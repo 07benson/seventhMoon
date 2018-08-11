@@ -40,6 +40,13 @@
 
     </div>
 
+     <div class="err_popup" :class="{'popup_win':is_popup}">
+      <h1>这里本应该有一个配图</h1>
+      <h1>可UI把妹去了!叫不回来！</h1>
+      <h1>活动炒鸡火爆的～～～表急！</h1>
+      <button class="try_btn" @click="err_try()">点我试试？</button>
+    </div>
+
   </div>
 </template>
 <script>
@@ -51,7 +58,8 @@
       return {
         theme: "",
         gender: '',
-        userName: ''
+        userName: '',
+        is_popup:false,
       }
     },
     mounted(){
@@ -69,7 +77,11 @@
           this.$get(types.getGender, {name: this.userName}).then((response => {
             let genderRes = response.data.gender;
             self.gender = genderRes;
-          }))
+          })).catch(err => {
+        if (err != null) {
+          this.is_popup = true
+        }
+      })
         } else if (len>8) {
           this.userName = this.userName.substring(0,4);
         } else {
@@ -119,10 +131,22 @@
           this.$router.push({path: '/thirdPage?rd='+Math.random(), query: {name: userName, themeId: themeId, gender: gender}});
         }
         
-      }
+      },
 
+      err_try(){
+        this.$get(types.getTheme).then(
+          (response => {
+            this.typeList = response['listData'];
+            this.is_popup = false;
+            return
+          })).catch(err => {
+            if (err != null) {
+              this.$router.push('/firstPage');
+              return
+            } 
+          })
+        }
     },
-
   }
 
 
@@ -503,5 +527,8 @@
     animation: woman_1 0.1s forwards;
   }
 
+    .popup_win {
+    display: block
+  }
 
 </style>
