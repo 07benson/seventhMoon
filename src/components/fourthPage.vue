@@ -67,32 +67,37 @@
 
     <div class="query_div">
       <div class="um_input_box">
+
         <div class="center_div">
-          <div class="box_top">请输入Ta的姓名/UM号</div>
+          <input class="box_top" type="text" v-model="query_name" placeholder="请输入Ta的姓名/UM号">
           <div class="box_center"><input type="text"></div>
           <div class="box_msg">找不到Ta，您可能输错了哦</div>
           <div class="box_bottom">
             <button >取消</button>
-            <button class="confirm">确认</button>
+            <button class="confirm" @click="query_btn()">确认</button>
           </div>
         </div>
       </div>
       <div class="um_list_box">
         <div class="query_content_div">
-          搜索“<span class="query_content">叶伟平</span>”
+          搜索“<span class="query_content">{{ query_name }}</span>”
         </div>
-        <div class="query_list">
+
+
+        <div class="query_list" v-for="(item,index) in query_res" :key="index">
           <div class="result_item">
             <div>
-              <span class="um_name">叶伟平</span>
-              <span class="um_account">ex-yeweiping001</span>
-              <span class="um_sex">男</span>
+              <span class="um_name">{{ item.realName }}</span>
+              <span class="um_account">{{ item.umid }}</span>
+              <span class="um_sex">{{ item.sex }}</span>
             </div>
             <div>
-              <span class="um_department">智能语言技术组</span>
+              <span class="um_department">{{ item.department }}</span>
             </div>
           </div>
         </div>
+
+
       </div>
     </div>
 
@@ -262,6 +267,7 @@
 </template>
 <script>
   import * as types from '@/store/types'
+  import * as paic from '@/store/paic'
 
   export default {
     name: 'poem',
@@ -275,16 +281,16 @@
         acrostic_item_2: "",
         acrostic_item_3: "",
         blessings: "",
-        acrostic_item:[/*'一二三四五六七',
-                       '一二三四五六七',
-                       '一二三四五六七',
-                       '一二三四五六七'*/],
+        acrostic_item:[],
         show:'',
-        themeId: -1
+        themeId: -1,
+        query_res:[],
+        query_name:''
       }
     },
     mounted(){
       this.themeId = this.$route.query.themeId;
+      this.query_btn()
     },
     created(){
       this.getPoem();
@@ -405,6 +411,24 @@
         var blessing = sessionStorage.getItem('blessing');
         this.acrostic_item = JSON.parse(acrostic);
         this.blessings = blessing;
+      },
+
+      // 调用快乐平安查询接口
+      query_btn(){
+        var queryname = '李辉';
+        let queryname_data = {
+          "name":queryname
+        };
+        let res_list = [{'realName':'lihui1','umid':'000011','sex':'男','department':'第一组'},
+                  {'realName':'lihui2','umid':'000012','sex':'男','department':'第一组'},
+                  {'realName':'lihui3','umid':'000013','sex':'男','department':'第一组'}]
+        this.$post(paic.queryEmpInfo,queryname_data).then(response => {
+          console.log('======');
+          this.query_res = res_list
+        }).catch(err => {
+          console.log('------');
+          
+        })
       }
     },
 
