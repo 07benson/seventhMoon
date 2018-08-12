@@ -25,6 +25,13 @@
       <div class="bottom-cloud2"></div>
       <div class="bottom-cloud1"></div>
     </div>
+      
+    <div class="err_popup" :class="{'popup_win':is_popup}">
+      <h1>这里本应该有一个配图</h1>
+      <h1>可UI把妹去了!叫不回来！</h1>
+      <h1>活动炒鸡火爆的～～～表急！</h1>
+      <button class="try_btn" @click="err_try()">点我试试？</button>
+    </div>
 
   </div>
 </template>
@@ -36,7 +43,8 @@
     data(){
       return {
         circleActive: false,
-        typeList: []
+        typeList: [],
+        is_popup:false
       }
     },
     methods: {
@@ -48,13 +56,31 @@
 
         }, 1000);
       },
+
+      err_try(){
+        this.$get(types.getTheme).then(
+          (response => {
+            this.typeList = response['listData'];
+            this.is_popup = false;
+            return
+        })).catch(err => {
+            if (err != null) {
+              location.reload()
+              return
+            }
+          })
+      }
     },
     mounted(){
       this.$get(types.getTheme).then(
         (response => {
           this.typeList = response['listData'];
         })
-      )
+      ).catch(err => {
+        if (err != null) {
+          this.is_popup = true
+        }
+      })
     }
 
   }
@@ -327,6 +353,10 @@
     animation-name: slideOutRight;
     animation-iteration-count: 1;
     animation-duration: 1s;
+  }
+
+  .popup_win {
+    display: block
   }
 
 </style>
