@@ -219,6 +219,7 @@
 </template>
 <script>
   import * as types from '@/store/types'
+  import * as paic from '@/store/paic'
 
   export default {
     name: 'poem',
@@ -254,8 +255,26 @@
           this.blessings = response.data.blessings;
           this.theme_title = response.data.themeTitle;
           //this.themeId = response.data.themeId;
+          this.sendRecordStatus();
         }))
       },
+      sendRecordStatus(){
+        var loveLetterId = this.poemUid;
+        let data = {
+          "loveLetterId" : loveLetterId
+        };
+        this.$post(paic.recordStatus,data).then(response => {
+          if(response.code == "200"){
+            console.log(response);
+          }else{
+            alert(response.message);
+            console.log(response);
+            //TODO 
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      }
 
     },
 

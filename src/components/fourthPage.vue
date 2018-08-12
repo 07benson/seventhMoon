@@ -48,7 +48,7 @@
       <div  class="box_bottom">
         <div class="send_btn" @click="doShare()">发送给Ta</div>
       </div>
-      <div class="edit_btn" @click="editWindow()"></div>
+      <div v-show="edit_btn_display" class="edit_btn" @click="editWindow()"></div>
     </div>
 
     <div class="edit_area" :class="{'showing':show=='show'}">
@@ -65,27 +65,25 @@
       <button class="cancel_btn" @click="cancelEdit()">取消</button>
     </div>
 
-    <div class="query_div">
-      <div class="um_input_box">
-
+    <div v-show="um_input_display" class="query_div">
+      <div  class="um_input_box">
         <div class="center_div">
-          <input class="box_top" type="text" v-model="query_name" placeholder="请输入Ta的姓名/UM号">
-          <div class="box_center"><input type="text"></div>
-          <div class="box_msg">找不到Ta，您可能输错了哦</div>
+          <div class="box_top">请输入Ta的姓名/UM号</div>
+          <div class="box_center"><input type="text" v-model="query_name" ></div>
+          <div v-show="msg_display" class="box_msg">找不到Ta，您可能输错了哦</div>
           <div class="box_bottom">
-            <button >取消</button>
+            <button @click="cancel_query()">取消</button>
             <button class="confirm" @click="query_btn()">确认</button>
           </div>
         </div>
       </div>
-      <div class="um_list_box">
+    </div>
+    <div v-show="um_list_display" class="um_list_box">
         <div class="query_content_div">
           搜索“<span class="query_content">{{ query_name }}</span>”
         </div>
-
-
         <div class="query_list" v-for="(item,index) in query_res" :key="index">
-          <div class="result_item">
+          <div class="result_item" @click="select_item(index)">
             <div>
               <span class="um_name">{{ item.realName }}</span>
               <span class="um_account">{{ item.umid }}</span>
@@ -96,9 +94,20 @@
             </div>
           </div>
         </div>
-
-
-      </div>
+    </div>
+    <div v-show="send_confirm_box_display" class="send_confirm_box">
+          <div class="center_div">
+            <div class="box_top">递上情书</div>
+            <div class="box_center"><input type="text" v-model="confirm_name" readonly ></div>
+            <div class="box_check"  @click="checkbox_click()">
+              <div class="checkbox" :class="{'checkbox_selected':checkbox_selected}">
+              </div>匿名发送
+            </div>
+            <div class="box_bottom">
+              <button @click="cancel_send()">取消</button>
+              <button class="confirm" @click="confirm_send()">确认</button>
+            </div>
+          </div>
     </div>
 
     <div class="lamination_bg_element">
@@ -285,12 +294,21 @@
         show:'',
         themeId: -1,
         query_res:[],
-        query_name:''
+        query_name:'',
+        edit_btn_display:true,
+        um_input_display: false,
+        um_list_display: false,
+        msg_display:false,
+        confirm_name: '',
+        confirm_item_index: 0,
+        send_confirm_box_display: false,
+        checkbox_selected: false,
+        linkUrl:"",
       }
     },
     mounted(){
       this.themeId = this.$route.query.themeId;
-      this.query_btn()
+      
     },
     created(){
       this.getPoem();
@@ -358,7 +376,7 @@
         this.show = 'show';
       },
       doShare(){
-        alert("期待与快乐平安对接");
+        this.um_input_display = true;
       },
 
       strLen(str){
@@ -415,21 +433,98 @@
 
       // 调用快乐平安查询接口
       query_btn(){
-        var queryname = '李辉';
+
+        var queryname = this.query_name;
+        if(queryname.length < 2||queryname.length > 4){
+            alert("Ta的姓名/昵称只能输入2~4个汉字哦！");
+            return;
+        }
         let queryname_data = {
           "name":queryname
         };
+        /*
         let res_list = [{'realName':'lihui1','umid':'000011','sex':'男','department':'第一组'},
                   {'realName':'lihui2','umid':'000012','sex':'男','department':'第一组'},
-                  {'realName':'lihui3','umid':'000013','sex':'男','department':'第一组'}]
+                  {'realName':'lihui3','umid':'000013','sex':'男','department':'第一组'}];
+*/
         this.$post(paic.queryEmpInfo,queryname_data).then(response => {
-          console.log('======');
-          this.query_res = res_list
+          if(response.code == "200"){
+            console.log(response);
+            this.query_res = response.body;
+            this.um_list_display = true;
+            this.um_input_display = false;
+          }else{
+            alert(response.message);
+            //TODO 
+          }
+          
         }).catch(err => {
-          console.log('------');
+          console.log(err);
           
         })
+      },
+      cancel_query(){
+        this.um_input_display = false;
+        this.query_name = "";
+      },
+      select_item(item_index){
+        console.log(this.query_res[item_index].realName);
+        this.confirm_item_index = item_index;
+        this.confirm_name = this.query_res[item_index].realName + '('+this.query_res[item_index].umid+')';
+        this.send_confirm_box_display = true;
+        this.um_list_display = false;
+      },
+      cancel_send(){
+        this.confirm_item_index = 0;
+        this.confirm_name = '';
+        this.send_confirm_box_display = false;
+      },
+      confirm_send(){
+        var thisurl = window.location.href;
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
+      
+        console.log(linkUrl);
+        var isAnonymity = "0";
+        var loveLetterId = this.poemUid;
+        var toUmId = this.query_res[this.confirm_item_index].umid;
+        var toSex = this.query_res[this.confirm_item_index].sex;
+
+        if(this.checkbox_selected){
+          isAnonymity = "1";
+        }
+        let send_data = {
+          "isAnonymity":isAnonymity,
+          "linkUrl":linkUrl,
+          "loveLetterId":loveLetterId,
+          "toUmId":toUmId,
+          "toSex":toSex
+        };
+        console.log(send_data);
+        this.$post(paic.sendLoveLetter,send_data).then(response => {
+          if(response.code == "200"){
+            console.log(response);
+
+            this.send_confirm_box_display = false;
+            this.edit_btn_display = false;
+            alert("发送成功");
+          }else{
+            alert(response.message);
+            console.log(response);
+            //TODO 
+          }
+        }).catch(err => {
+          console.log(err);
+          
+        });
+      },
+      checkbox_click(){
+        if(this.checkbox_selected){
+          this.checkbox_selected = false;
+        }else{
+          this.checkbox_selected = true;
+        }
       }
+      
     },
 
   }
@@ -1248,7 +1343,6 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background:#5a96e2;
   z-index: 4000;
 }
 .query_div .um_input_box{
@@ -1274,17 +1368,21 @@
   line-height: 1rem;
 }
 .query_div .um_input_box .center_div .box_center{
-  height: 1.2rem;
+  height: 1.4rem;
   text-align: center;
   font-size: 0.4rem; 
   line-height: 1rem;
 }
 .query_div .um_input_box .center_div .box_center input{
+  text-align: center;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.53rem;
   border: 1px solid #333333;
   height: 1rem;
   width: 88%;
 }
 .query_div .um_input_box .center_div .box_msg{
+  color: red;
   font-size: 0.4rem;
   text-align: center;
   line-height: 0.6rem;
@@ -1304,27 +1402,100 @@
 .query_div .um_input_box .center_div .box_bottom .confirm{
   border-left:1px solid #333333;
 }
-.query_div .um_list_box{
+.um_list_box{
   position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   background: #f5f5f5;
   z-index: 4002;
 }
 
-.query_div .um_list_box .query_content_div{
+.um_list_box .query_content_div{
   padding: 0.2rem 0.3rem 0.1rem 0.3rem;
   height: 1.5rem;
   font-size: 0.6rem;
   line-height: 1.5rem;
   background: #e4e4e4;
 }
-.query_div .um_list_box .query_list .result_item{
+.um_list_box .query_list .result_item{
   font-size: 0.36rem;
   line-height: 0.5rem;
   height: 2rem;
   border-bottom: 1px solid #9b9b9b;
   padding: 0.4rem 0.4rem;
+}
+
+
+
+.send_confirm_box{
+  position: absolute;
+  width: 100%;
+  bottom: 25%;
+  margin: 0 auto;
+  z-index: 4004;
+}
+.send_confirm_box .center_div{
+  color: #000000;
+  height: 100%;
+  width: 8rem;
+  margin: 0 auto;
+  border: 1px solid #333333;
+  border-radius: 0.2rem;
+  background: #ffffff;
+}
+.send_confirm_box .center_div .box_top{
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+}
+.send_confirm_box .center_div .box_center{
+  height: 1.2rem;
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+}
+.send_confirm_box .center_div .box_center input{
+  text-align: center;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.43rem;
+  border: 1px solid #333333;
+  height: 1rem;
+  width: 88%;
+}
+.send_confirm_box .center_div .box_check{
+  color: #333333;
+  font-size: 0.4rem;
+  text-align: center;
+  line-height: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.send_confirm_box .center_div .box_bottom{
+  height: 1.3rem;
+  text-align: center;
+  font-size: 0.4rem; 
+  line-height: 1rem;
+  border-top: 1px solid #333333;
+}
+.send_confirm_box .center_div .box_bottom button{
+  height: 100%;
+  width: 49%;
+}
+.send_confirm_box .center_div .box_bottom .confirm{
+  border-left:1px solid #333333;
+}
+.send_confirm_box .checkbox{
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 1px solid #333333;
+  border-radius: 0.6rem;
+  padding: 0.2rem;
+  margin-right: 0.1rem;
+}
+.send_confirm_box .checkbox_selected{
+  background: #505050;
 }
 
 </style>
