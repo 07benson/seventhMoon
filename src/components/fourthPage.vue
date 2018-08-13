@@ -45,7 +45,7 @@
         </div>
       </div>
       
-      <div  class="box_bottom">
+      <div  class="box_bottom" v-show="send_btn_display">
         <div class="send_btn" @click="doShare()">发送给Ta</div>
       </div>
       <div v-show="edit_btn_display" class="edit_btn" @click="editWindow()"></div>
@@ -81,9 +81,10 @@
     <div v-show="um_list_display" class="um_list_box">
         <div class="query_content_div">
           搜索“<span class="query_content">{{ query_name }}</span>”
+          <div class="um_list_box_close" @click="close_um_list_box()">X</div>
         </div>
-        <div class="query_list" v-for="(item,index) in query_res" :key="index">
-          <div class="result_item" @click="select_item(index)">
+        <div class="query_list" >
+          <div class="result_item" v-for="(item,index) in query_res" :key="index" @click="select_item(index)">
             <div>
               <span class="um_name">{{ item.realName }}</span>
               <span class="um_account">{{ item.umid }}</span>
@@ -95,19 +96,23 @@
           </div>
         </div>
     </div>
-    <div v-show="send_confirm_box_display" class="send_confirm_box">
-          <div class="center_div">
-            <div class="box_top">递上情书</div>
-            <div class="box_center"><input type="text" v-model="confirm_name" readonly ></div>
-            <div class="box_check"  @click="checkbox_click()">
-              <div class="checkbox" :class="{'checkbox_selected':checkbox_selected}">
-              </div>匿名发送
-            </div>
-            <div class="box_bottom">
-              <button @click="cancel_send()">取消</button>
-              <button class="confirm" @click="confirm_send()">确认</button>
+    <div class="send_confirm_div"  v-show="send_confirm_box_display">
+      <div class="send_confirm_box">
+        <div class="center_div">
+          <div class="box_top">递上情书</div>
+          <div class="box_center"><input type="text" v-model="confirm_name" readonly ></div>
+          <div class="box_check"  @click="checkbox_click()">
+            <div class="box_check_content">
+              <div class="checkbox" :class="{'checkbox_selected':checkbox_selected}"></div>
+              匿名发送
             </div>
           </div>
+          <div class="box_bottom">
+            <button @click="cancel_send()">取消</button>
+            <button class="confirm" @click="confirm_send()">确认</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="lamination_bg_element">
@@ -296,7 +301,8 @@
         themeId: -1,
         query_res:[],
         query_name:'',
-        edit_btn_display:true,
+        send_btn_display: true,
+        edit_btn_display: true,
         um_input_display: false,
         um_list_display: false,
         msg_display:false,
@@ -469,6 +475,9 @@
         this.um_input_display = false;
         this.query_name = "";
       },
+      close_um_list_box(){
+        this.um_list_display = false;
+      },
       select_item(item_index){
         console.log(this.query_res[item_index].realName);
         this.confirm_item_index = item_index;
@@ -520,6 +529,7 @@
             this.send_confirm_box_display = false;
             this.edit_btn_display = false;
             alert("发送成功");
+            this.send_btn_display = false;
           }else{
             alert(response.message);
             console.log(response);
@@ -1453,13 +1463,28 @@
   background: #f5f5f5;
   z-index: 4002;
 }
-
 .um_list_box .query_content_div{
+  position: relative;
   padding: 0.2rem 0.3rem 0.1rem 0.3rem;
   height: 1.5rem;
   font-size: 0.6rem;
   line-height: 1.5rem;
   background: #e4e4e4;
+}
+.um_list_box .query_content_div .um_list_box_close{
+  position: absolute;
+  bottom: 0.1rem;
+  right: 0.1rem;
+  width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+  text-align: center;
+  border-radius: 1.5rem;
+  color: #868686;
+}
+.um_list_box .query_list{
+  height: calc(100% - 1.5rem);
+  overflow-y: scroll;
 }
 .um_list_box .query_list .result_item{
   font-size: 0.36rem;
@@ -1470,15 +1495,23 @@
 }
 
 
-
-.send_confirm_box{
+.send_confirm_div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 4005;
+}
+.send_confirm_div .send_confirm_box{
   position: absolute;
   width: 100%;
   bottom: 25%;
   margin: 0 auto;
-  z-index: 4004;
+  z-index: 4006;
 }
-.send_confirm_box .center_div{
+.send_confirm_div .send_confirm_box .center_div{
   color: #000000;
   height: 100%;
   width: 8rem;
@@ -1487,18 +1520,18 @@
   border-radius: 0.2rem;
   background: #ffffff;
 }
-.send_confirm_box .center_div .box_top{
+.send_confirm_div .send_confirm_box .center_div .box_top{
   text-align: center;
   font-size: 0.4rem; 
   line-height: 1rem;
 }
-.send_confirm_box .center_div .box_center{
+.send_confirm_div .send_confirm_box .center_div .box_center{
   height: 1.2rem;
   text-align: center;
   font-size: 0.4rem; 
   line-height: 1rem;
 }
-.send_confirm_box .center_div .box_center input{
+.send_confirm_div .send_confirm_box .center_div .box_center input{
   text-align: center;
   padding: 0.1rem 0.5rem;
   font-size: 0.43rem;
@@ -1506,38 +1539,53 @@
   height: 1rem;
   width: 88%;
 }
-.send_confirm_box .center_div .box_check{
+.send_confirm_div .send_confirm_box .center_div .box_check{
+  width: 100%;
   color: #333333;
   font-size: 0.4rem;
   text-align: center;
-  line-height: 0.4rem;
-  margin-bottom: 0.4rem;
+  height: 1rem;
+  margin-bottom: 0.2rem;
 }
-.send_confirm_box .center_div .box_bottom{
+.send_confirm_div .send_confirm_box .center_div .box_check_content{
+  position: relative;
+  margin: 0 auto;
+  height: 1rem;
+  width: 2rem;
+  line-height: 0.8rem;
+}
+
+
+.send_confirm_div .send_confirm_box .center_div .box_bottom{
   height: 1.3rem;
   text-align: center;
   font-size: 0.4rem; 
   line-height: 1rem;
   border-top: 1px solid #333333;
 }
-.send_confirm_box .center_div .box_bottom button{
+.send_confirm_div .send_confirm_box .center_div .box_bottom button{
   height: 100%;
   width: 49%;
 }
-.send_confirm_box .center_div .box_bottom .confirm{
+.send_confirm_div .send_confirm_box .center_div .box_bottom .confirm{
   border-left:1px solid #333333;
 }
-.send_confirm_box .checkbox{
+.send_confirm_div .send_confirm_box .checkbox{
+  position: absolute;
+  left: -0.8rem;
+  top: 0;
+  height: 0.8rem;
+  width: 0.8rem;
   display: inline-block;
-  width: 0.4rem;
-  height: 0.4rem;
-  border: 1px solid #333333;
   border-radius: 0.6rem;
-  padding: 0.2rem;
-  margin-right: 0.1rem;
+  background-image: url("../assets/img/page_4/checkbox_off.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
-.send_confirm_box .checkbox_selected{
-  background: #505050;
+.send_confirm_div .send_confirm_box .checkbox_selected{
+  background-image: url("../assets/img/page_4/checkbox_on.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 </style>

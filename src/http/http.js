@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.timeout = 1500;
+axios.defaults.timeout = 30000;
 axios.defaults.headers.get['Content-Type'] = 'application/json; charset=utf-8'
 //axios.defaults.baseURL = 'http://103.28.215.253:10662/api/v1';
 

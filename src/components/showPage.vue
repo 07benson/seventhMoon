@@ -257,7 +257,19 @@
         let data = {
           "loveLetterId" : loveLetterId
         };
-        this.$post(paic.recordStatus,data).then(response => {
+
+        let recordStatusUrl = paic.recordStatus;
+        let parms = "";
+        let cookie = document.cookie;
+        if(cookie.indexOf("hm_sessionid") != -1){
+            var loginsession = cookie.split("hm_sessionid=")[1];
+            loginsession = loginsession.split(";")[0];
+        }
+        if(App.IS_ANDROID){
+            parms = "?loginsession=" + loginsession;
+        }
+        recordStatusUrl = recordStatusUrl + parms;
+        this.$post(recordStatusUrl,data).then(response => {
           if(response.code == "200"){
             console.log(response);
           }else{
