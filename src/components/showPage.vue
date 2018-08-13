@@ -20,10 +20,7 @@
       <div class="box_top">
         <div class="acrostic_div">
           <div class="acrostic_position">
-            <div class="acrostic_item acrostic_item_0">{{ acrostic_item_0 }}</div>
-            <div class="acrostic_item acrostic_item_1">{{ acrostic_item_1 }}</div>
-            <div class="acrostic_item acrostic_item_2">{{ acrostic_item_2 }}</div>
-            <div class="acrostic_item acrostic_item_3">{{ acrostic_item_3 }}</div>
+            <div class="acrostic_item" :class="'acrostic_'+index.toString()" v-for="(item,index) in acrostic_item" :key="index">{{ item }}</div>
           </div>
         </div>
         <div class="theme_div">
@@ -220,6 +217,7 @@
 <script>
   import * as types from '@/store/types'
   import * as paic from '@/store/paic'
+  import App from "../assets/js/native.js"
 
   export default {
     name: 'poem',
@@ -228,17 +226,16 @@
         selectKeywords: 0,
         theme_title: "",
         poemUid: "",
-        acrostic_item_0: "",
-        acrostic_item_1: "",
-        acrostic_item_2: "",
-        acrostic_item_3: "",
+        acrostic_item:[],
         blessings: "",
         themeId: -1
       }
     },
+    mounted(){
+      this.share_btn();
+    },
     created(){
       this.getPoem();
-
     },
     methods: {
       getPoem(){
@@ -248,13 +245,10 @@
         this.$get(types.getPoem, model).then((response => {
           this.poemUid = response.data.poemUid;
           this.themeId = response.data.themeId;
-          this.acrostic_item_0 = response.data.acrostic[0];
-          this.acrostic_item_1 = response.data.acrostic[1];
-          this.acrostic_item_2 = response.data.acrostic[2];
-          this.acrostic_item_3 = response.data.acrostic[3];
+          this.acrostic_item = response.data.acrostic.slice(0,4);
           this.blessings = response.data.blessings;
           this.theme_title = response.data.themeTitle;
-          //this.themeId = response.data.themeId;
+          this.themeId = response.data.themeId;
           this.sendRecordStatus();
         }))
       },
@@ -274,7 +268,33 @@
         }).catch(err => {
           console.log(err);
         });
-      }
+      },
+      //app右上角分享接口调用
+      share_btn() {
+        var thisurl = window.location.href;
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        var self = this;
+        var obj = {
+            title: '七夕AI传情', // 分享标题
+            desc: 'AI为你写诗，为你做不可能的事', // 分享描述
+            description: 'AI为你写诗，为你做不可能的事', // 分享描述
+            link: linkUrl,
+            url: linkUrl,
+            imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            imageUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            bounce: false,//是否直接弹起native分享选择页
+            channel:"1,2,3"
+        };
+        var data = JSON.stringify(obj);
+        App.call("onMenuShare",data,function(res){
+            if(typeof res == "string"){
+                res = JSON.parse(res);
+            }
+            if(res.code == 1){
+                console.log("share success");
+            }
+        });
+       }
 
     },
 
@@ -306,6 +326,7 @@
     width: 100%;
     top:0;
     left: 0;
+    font-family: 华文行楷;
   }
   .content_box .box_top .acrostic_div,.theme_div{
     width: 50%;
@@ -319,7 +340,6 @@
     float: right;
     display: inline-block;
     font-size: 0.63rem;
-    font-family: 华文行楷;
     margin: 0 auto;  
     height: 5.5rem;
     writing-mode: vertical-rl;
@@ -339,7 +359,6 @@
     height: 5.6rem;
     font-size: 1.35rem;
     font-weight: bolder;
-    font-family: 华文行楷;
     writing-mode: vertical-rl;
     writing-mode: tb-rl;
     margin-left: 1rem;

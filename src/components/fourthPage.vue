@@ -277,6 +277,7 @@
 <script>
   import * as types from '@/store/types'
   import * as paic from '@/store/paic'
+  import App from "../assets/js/native.js"
 
   export default {
     name: 'poem',
@@ -308,10 +309,11 @@
     },
     mounted(){
       this.themeId = this.$route.query.themeId;
-      
+      this.share_btn();
     },
     created(){
       this.getPoem();
+      console.log(App);
     },
     methods: {
       getPoem(){
@@ -321,10 +323,6 @@
         this.$get(types.getAcrostic, model).then((response => {
           this.poemUid = response.data.poemUid;
           this.acrostic_item = response.data.acrostic.slice(0,4);
-          // this.acrostic_item_0 = response.data.acrostic[0];
-          // this.acrostic_item_1 = response.data.acrostic[1];
-          // this.acrostic_item_2 = response.data.acrostic[2];
-          // this.acrostic_item_3 = response.data.acrostic[3];
           this.blessings = response.data.blessings;
           this.theme_title = response.data.themeTitle;
 
@@ -435,19 +433,23 @@
       query_btn(){
 
         var queryname = this.query_name;
-        if(queryname.length < 2||queryname.length > 4){
-            alert("Ta的姓名/昵称只能输入2~4个汉字哦！");
-            return;
-        }
         let queryname_data = {
           "name":queryname
         };
-        /*
-        let res_list = [{'realName':'lihui1','umid':'000011','sex':'男','department':'第一组'},
-                  {'realName':'lihui2','umid':'000012','sex':'男','department':'第一组'},
-                  {'realName':'lihui3','umid':'000013','sex':'男','department':'第一组'}];
-*/
-        this.$post(paic.queryEmpInfo,queryname_data).then(response => {
+
+        let queryEmpInfoUrl = paic.queryEmpInfo;
+        let parms = "";
+        let cookie = document.cookie;
+        if(cookie.indexOf("hm_sessionid") != -1){
+            var loginsession = cookie.split("hm_sessionid=")[1];
+            loginsession = loginsession.split(";")[0];
+        }
+        if(App.IS_ANDROID){
+            parms = "?loginsession=" + loginsession;
+        }
+        queryEmpInfoUrl = queryEmpInfoUrl + parms;
+        
+        this.$post(queryEmpInfoUrl,queryname_data).then(response => {
           if(response.code == "200"){
             console.log(response);
             this.query_res = response.body;
@@ -499,8 +501,19 @@
           "toUmId":toUmId,
           "toSex":toSex
         };
-        console.log(send_data);
-        this.$post(paic.sendLoveLetter,send_data).then(response => {
+        let sendLoveLetterUrl = paic.sendLoveLetter;
+        let parms = "";
+        let cookie = document.cookie;
+        if(cookie.indexOf("hm_sessionid") != -1){
+            var loginsession = cookie.split("hm_sessionid=")[1];
+            loginsession = loginsession.split(";")[0];
+        }
+        if(App.IS_ANDROID){
+            parms = "?loginsession=" + loginsession;
+        }
+        sendLoveLetterUrl = sendLoveLetterUrl + parms;
+        console.log(sendLoveLetterUrl);
+        this.$post(sendLoveLetterUrl,send_data).then(response => {
           if(response.code == "200"){
             console.log(response);
 
@@ -523,7 +536,33 @@
         }else{
           this.checkbox_selected = true;
         }
-      }
+      },
+      //app右上角分享接口调用
+      share_btn() {
+        var thisurl = window.location.href;
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        var self = this;
+        var obj = {
+            title: '七夕AI传情', // 分享标题
+            desc: 'AI为你写诗，为你做不可能的事', // 分享描述
+            description: 'AI为你写诗，为你做不可能的事', // 分享描述
+            link: linkUrl,
+            url: linkUrl,
+            imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            imageUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            bounce: false,//是否直接弹起native分享选择页
+            channel:"1,2,3"
+        };
+        var data = JSON.stringify(obj);
+        App.call("onMenuShare",data,function(res){
+            if(typeof res == "string"){
+                res = JSON.parse(res);
+            }
+            if(res.code == 1){
+                console.log("share success");
+            }
+        });
+       }
       
     },
 
@@ -569,6 +608,7 @@
     display: inline-block;
     font-size: 0.63rem;
     font-family: 华文行楷;
+    letter-spacing:0.07rem;
     margin: 0 auto;  
     height: 5.5rem;
     writing-mode: vertical-rl;
@@ -586,8 +626,9 @@
   }
   .content_box .box_top .theme_div .theme_title{
     height: 5.6rem;
-    font-size: 1.35rem;
+    font-size: 1.32rem;
     font-weight: bolder;
+     letter-spacing:0.05rem;
     font-family: 华文行楷;
     writing-mode: vertical-rl;
     writing-mode: tb-rl;
@@ -638,18 +679,18 @@
   .content_box .box_bottom{
     position: absolute;
     height: 14%;
-    top:82%;
+    top:83%;
   }
   .content_box .box_bottom .send_btn{
     
-    height: 1rem;
-    width: 5rem;
+    height: 1.2rem;
+    width: 8rem;
     margin: 0 auto;
-    background: #5a96e2;
-    border-radius: 1rem;
-    line-height: 1rem;
+    line-height: 1.2rem;
     text-align: center;
-    font-size: 0.4rem;
+    font-size: 0.44rem;
+    background-image: url("../assets/img/page_4/send_btn_off.png");
+    background-size: 8rem 1.2rem;
     
   }
   .content_box .edit_btn{
@@ -1344,6 +1385,7 @@
   width: 100%;
   height: 100%;
   z-index: 4000;
+  background: rgba(0, 0, 0, 0.55);
 }
 .query_div .um_input_box{
   position: absolute;
