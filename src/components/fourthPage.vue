@@ -461,11 +461,15 @@
             parms = "?loginsession=" + loginsession;
         }
         queryEmpInfoUrl = queryEmpInfoUrl + parms;
-        
+        this.msg_display = false;
         this.$post(queryEmpInfoUrl,queryname_data).then(response => {
           if(response.code == "200"){
             console.log(response);
             this.query_res = response.body;
+            if(this.query_res==null||this.query_res.length <1){
+                this.msg_display = true;
+                return;
+            }
             this.um_list_display = true;
             this.um_input_display = false;
           }else{
@@ -588,7 +592,7 @@
          this.alert_setTimeOut = setTimeout(() => {
                 this.alert_display = false;
             }, 2000);
-       },
+       }
       
     },
 
