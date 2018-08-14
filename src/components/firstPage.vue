@@ -108,9 +108,9 @@
       
         var self = this;
         var obj = {
-            title: '七夕AI传情', // 分享标题
-            desc: 'AI为你写诗，为你做不可能的事', // 分享描述
-            description: 'AI为你写诗，为你做不可能的事', // 分享描述
+            title: 'AI为你写诗，为你做不可能的事', // 分享标题
+            desc: '亲手制作一份专属情书送给Ta吧~', // 分享描述
+            description: '亲手制作一份专属情书送给Ta吧~', // 分享描述
             link: linkUrl,
             url: linkUrl,
             imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标

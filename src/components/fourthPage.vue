@@ -472,6 +472,7 @@
             }
             this.um_list_display = true;
             this.um_input_display = false;
+            this.query_name = "";
           }else{
             this.alert(response.message);
             //TODO 
@@ -485,6 +486,7 @@
       cancel_query(){
         this.um_input_display = false;
         this.query_name = "";
+        this.msg_display = false;
       },
       close_um_list_box(){
         this.um_list_display = false;
@@ -563,9 +565,9 @@
       
         var self = this;
         var obj = {
-            title: '七夕AI传情', // 分享标题
-            desc: 'AI为你写诗，为你做不可能的事', // 分享描述
-            description: 'AI为你写诗，为你做不可能的事', // 分享描述
+            title: 'Ta给我发送了一封专属定制的AI情书！', // 分享标题
+            desc: '也邀请你一起鉴赏哦~！', // 分享描述
+            description: '也邀请你一起鉴赏哦~！', // 分享描述
             link: linkUrl,
             url: linkUrl,
             imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
