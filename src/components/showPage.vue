@@ -284,7 +284,9 @@
       //app右上角分享接口调用
       share_btn() {
         var thisurl = window.location.href;
-        var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
+      
         var self = this;
         var obj = {
             title: '七夕AI传情', // 分享标题

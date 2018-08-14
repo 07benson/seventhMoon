@@ -25,7 +25,7 @@
         </div>
         <div class="theme_div">
           <div class="theme_position">
-            <div class="theme_title">
+            <div class="theme_title" >
               {{ theme_title }}
             </div>
           </div>
@@ -81,14 +81,13 @@
     <div v-show="um_list_display" class="um_list_box">
         <div class="query_content_div">
           搜索“<span class="query_content">{{ query_name }}</span>”
-          <div class="um_list_box_close" @click="close_um_list_box()">X</div>
+          <div class="um_list_box_close" @click="close_um_list_box()"></div>
         </div>
         <div class="query_list" >
           <div class="result_item" v-for="(item,index) in query_res" :key="index" @click="select_item(index)">
             <div>
               <span class="um_name">{{ item.realName }}</span>
-              <span class="um_account">{{ item.umid }}</span>
-              <span class="um_sex">{{ item.sex }}</span>
+              <span class="um_account">({{ item.umid }})</span>
             </div>
             <div>
               <span class="um_department">{{ item.department }}</span>
@@ -276,7 +275,14 @@
        
       </template>
     </div>
+    
+    <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
 
+    <div class="loading" v-show="loading_display">
+      <div class="l_center">
+        <img class="loading_img" src="../assets/img/loading.gif"/>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -311,6 +317,10 @@
         send_confirm_box_display: false,
         checkbox_selected: false,
         linkUrl:"",
+        alert_msg: "",
+        alert_display: false,
+        alert_setTimeOut: false,
+        loading_display: false,
       }
     },
     mounted(){
@@ -319,14 +329,15 @@
     },
     created(){
       this.getPoem();
-      console.log(App);
     },
     methods: {
       getPoem(){
         // 发请求做诗请求，带参数themeId，keywordIds，acrosticUid
         //{themeId: themeId, keywordIds: keywordIds, acrosticUid: acrosticUid}
+        this.loading_display = true;
         var model = this.$route.query;
         this.$get(types.getAcrostic, model).then((response => {
+          this.loading_display = false;
           this.poemUid = response.data.poemUid;
           this.acrostic_item = response.data.acrostic.slice(0,4);
           this.blessings = response.data.blessings;
@@ -343,7 +354,7 @@
           var cur_blessing = this.blessings;
           var blessinglen = this.strLen(cur_blessing);
           if (blessinglen<=0) {
-            alert('祝福语不可为空哦！')
+            this.alert('祝福语不可为空哦！');
           } else if (blessinglen>198) {
             this.blessings = cur_blessing.substring(0,101)
           }
@@ -352,7 +363,7 @@
           var cur_content = this.acrostic_item[e];
           var len = this.strLen(cur_content);
           if (len<=0) {
-            alert('诗句不可为空哦！')
+            this.alert('诗句不可为空哦！');
           } else if (len>12) {
             this.acrostic_item[e] = cur_content.substring(0,7)
           }
@@ -375,8 +386,7 @@
         }
       },
 
-      editWindow(){
-        // alert("正在开发中");
+      editWindow(){//打开编辑窗口
         this.show = 'show';
       },
       doShare(){
@@ -398,9 +408,6 @@
       },
 
       confirmEdit(){
-        
-        
-
         var poemUid = this.poemUid;
         var acrostic = this.acrostic_item;
         var blessing = this.blessings;
@@ -419,7 +426,7 @@
           }
         ).then((response => {
           console.log(response);
-          alert("保存成功");
+          this.alert("保存成功");
           this.show = 'hide';
           sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
           sessionStorage.setItem('blessing',this.blessings);
@@ -462,7 +469,7 @@
             this.um_list_display = true;
             this.um_input_display = false;
           }else{
-            alert(response.message);
+            this.alert(response.message);
             //TODO 
           }
           
@@ -495,13 +502,13 @@
         var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
       
         console.log(linkUrl);
-        var isAnonymity = "0";
+        var isAnonymity = "1";
         var loveLetterId = this.poemUid;
         var toUmId = this.query_res[this.confirm_item_index].umid;
         var toSex = this.query_res[this.confirm_item_index].sex;
 
         if(this.checkbox_selected){
-          isAnonymity = "1";
+          isAnonymity = "0";
         }
         let send_data = {
           "isAnonymity":isAnonymity,
@@ -524,20 +531,17 @@
         console.log(sendLoveLetterUrl);
         this.$post(sendLoveLetterUrl,send_data).then(response => {
           if(response.code == "200"){
-            console.log(response);
-
             this.send_confirm_box_display = false;
             this.edit_btn_display = false;
-            alert("发送成功");
             this.send_btn_display = false;
+            this.alert("发送成功");
+          }else if(response.code == "606"){  
+            this.alert("登录态已过期，请重新登录试试");
           }else{
-            alert(response.message);
-            console.log(response);
-            //TODO 
+            this.alert(response.message);
           }
         }).catch(err => {
           console.log(err);
-          
         });
       },
       checkbox_click(){
@@ -550,7 +554,9 @@
       //app右上角分享接口调用
       share_btn() {
         var thisurl = window.location.href;
-        var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
+      
         var self = this;
         var obj = {
             title: '七夕AI传情', // 分享标题
@@ -572,7 +578,17 @@
                 console.log("share success");
             }
         });
-       }
+       },
+       alert(msg){
+         if( this.alert_setTimeOut ){
+           clearTimeout(this.alert_setTimeOut);
+         }
+         this.alert_display = true;
+         this.alert_msg = msg;
+         this.alert_setTimeOut = setTimeout(() => {
+                this.alert_display = false;
+            }, 2000);
+       },
       
     },
 
@@ -1481,6 +1497,10 @@
   text-align: center;
   border-radius: 1.5rem;
   color: #868686;
+  background-image: url("../assets/img/page_4/close.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 0.8rem;
 }
 .um_list_box .query_list{
   height: calc(100% - 1.5rem);
@@ -1493,7 +1513,22 @@
   border-bottom: 1px solid #9b9b9b;
   padding: 0.4rem 0.4rem;
 }
-
+.um_list_box .query_list .result_item .um_name{
+    font-size: 0.47rem;
+    color: #ff8d00;
+    font-weight: 500;
+}
+.um_list_box .query_list .result_item .um_account{
+    padding-left: 0.18rem;
+    font-size: 0.4rem;
+    color: #989898;
+}
+.um_list_box .query_list .result_item .um_department {
+    display: inline-block;
+    margin-top: 0.2rem;
+    font-size: 0.4rem;
+    color: #989898; 
+}
 
 .send_confirm_div {
   position: absolute;
@@ -1586,6 +1621,45 @@
   background-image: url("../assets/img/page_4/checkbox_on.png");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.alert_div{
+    z-index: 5000;
+    top: 50%;
+    left: 20%;
+    position: fixed;
+    background: #ffffff;
+    color: #303030;
+    min-height: 1.5rem;
+    width: 60%;
+    border-radius: 0.4rem;
+    font-size: 0.5rem;
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    line-height: 0.5rem;
+    font-weight: normal;
+}
+/* 加载中动画 */
+.loading{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(78, 78, 78, 0.7);
+  z-index: 4900;
+}
+.loading .l_center{
+  position: absolute;
+  top: calc(50% - 2.1rem);
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.loading .l_center .loading_img{
+  width: 5rem;
+  border-radius: 0.5rem;
+  
 }
 
 </style>

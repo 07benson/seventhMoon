@@ -33,7 +33,11 @@
       <h1>活动炒鸡火爆的～～～表急！</h1>
       <button class="try_btn" @click="err_try()">点我试试？</button>
     </div>
-
+    <div class="loading" v-show="loading_display">
+      <div class="l_center">
+        <img class="loading_img" src="../assets/img/loading.gif"/>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -48,6 +52,7 @@
          res:'',
          selecteId:[],
          is_popup:false,
+         loading_display:false,
       }
     },
     created(){
@@ -57,14 +62,17 @@
       getKeywordList(){
         // 发请求做诗请求，带参数name，gender，themeId
         //{name: userName, themeId: themeId, gender: gender}
+        this.loading_display = true;
         var model = this.$route.query;
         this.$get(types.getKeyword, model).then((response => {
           this.keywordList = response.data.KeywordList;
           this.res = response;
+          this.loading_display = false;
         })).catch(err => {
           if (err != null) {
             this.is_popup = true
           }
+          this.loading_display = false;
         })
       },
       createSeletedID(keywordid){
@@ -116,18 +124,19 @@
       },
 
       err_try(){
-        var self = this;
-        this.$get(types.getTheme).then(
-          (response => {
-          this.typeList = response['listData'];
-          this.is_popup = false;
-          return
+        var model = this.$route.query;
+        this.loading_display = true;
+        this.$get(types.getKeyword, model).then((response => {
+          this.keywordList = response.data.KeywordList;
+          this.res = response;
+          this.loading_display = false;
         })).catch(err => {
           if (err != null) {
-          this.$router.push('/firstPage')
-          return
+            this.$router.push('/firstPage');
+            return;
           }
-        })
+          this.loading_display = false;
+        });
       }
     },
   }
@@ -567,4 +576,27 @@
   .popup_win {
     display: block
   }
+
+  /* 加载中动画 */
+.loading{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(78, 78, 78, 0.7);
+  z-index: 4900;
+}
+.loading .l_center{
+  position: absolute;
+  top: calc(50% - 2.1rem);
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.loading .l_center .loading_img{
+  width: 5rem;
+  border-radius: 0.5rem;
+  
+}
 </style>
