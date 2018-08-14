@@ -27,11 +27,20 @@
     </div>
       
     <div class="err_popup" :class="{'popup_win':is_popup}">
-      <h1>这里本应该有一个配图</h1>
-      <h1>可UI把妹去了!叫不回来！</h1>
-      <h1>活动炒鸡火爆的～～～表急！</h1>
-      <button class="try_btn" @click="err_try()">点我试试？</button>
+      <div class="crowding_img_div">
+        <img class="crowding_img" src="../assets/img/crowding.png"/>
+      </div>
+      <div class="crowding_msg">
+        活动超级火爆<br/>
+        网络十分拥挤...
+      </div>
+      <div class="try_btn_div">
+        <button class="try_btn" @click="err_try()">我要挤一挤</button>
+      </div>
+      
     </div>
+
+    <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
 
   </div>
 </template>
@@ -46,7 +55,10 @@
       return {
         circleActive: false,
         typeList: [],
-        is_popup:false
+        is_popup:false,
+        alert_msg: "",
+        alert_display: false,
+        alert_setTimeOut: false,
       }
     },
     methods: {
@@ -102,6 +114,7 @@
       },
       //app右上角分享接口调用
       share_btn() {
+        //this.alert("执行分享接口修改")
         var thisurl = window.location.href;
         //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
         var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/firstPage";
@@ -124,8 +137,9 @@
                 res = JSON.parse(res);
             }
             if(res.code == 1){
-              this.upload_pv('/2018/aug/loveletter/homeShare');
+              self.upload_pv('/2018/aug/loveletter/homeShare');
             }
+            
         });
        },
        upload_click(){
@@ -133,10 +147,21 @@
          if(button==1){
            this.upload_pv('/2018/aug/loveletter/homeButtonClickNum');
          }
+       },
+       alert(msg){
+         if( this.alert_setTimeOut ){
+           clearTimeout(this.alert_setTimeOut);
+         }
+         this.alert_display = true;
+         this.alert_msg = msg;
+         this.alert_setTimeOut = setTimeout(() => {
+                this.alert_display = false;
+            }, 2000);
        }
 
     },
     mounted(){
+      this.share_btn();
       this.upload_pv('/2018/aug/loveletter/home');//上报访问
       this.upload_click();//上报二级菜单点击量
       this.$get(types.getTheme).then(

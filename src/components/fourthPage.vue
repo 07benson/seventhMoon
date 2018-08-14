@@ -325,7 +325,7 @@
     },
     mounted(){
       this.themeId = this.$route.query.themeId;
-      this.share_btn();
+      
     },
     created(){
       this.getPoem();
@@ -342,7 +342,7 @@
           this.acrostic_item = response.data.acrostic.slice(0,4);
           this.blessings = response.data.blessings;
           this.theme_title = response.data.themeTitle;
-
+          this.share_btn();
           // 将初始数据保存
           sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
           sessionStorage.setItem('blessing',this.blessings);
@@ -425,7 +425,7 @@
             //'blessing':blessing,
           }
         ).then((response => {
-          console.log(response);
+          //console.log(response);
           this.alert("保存成功");
           this.show = 'hide';
           sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
@@ -446,6 +446,9 @@
       query_btn(){
 
         var queryname = this.query_name;
+        if (queryname.length<1) {
+          this.alert('请输入2～4个中文哟');
+        }
         let queryname_data = {
           "name":queryname
         };
@@ -472,7 +475,6 @@
             }
             this.um_list_display = true;
             this.um_input_display = false;
-            this.query_name = "";
           }else{
             this.alert(response.message);
             //TODO 
@@ -502,6 +504,7 @@
         this.confirm_item_index = 0;
         this.confirm_name = '';
         this.send_confirm_box_display = false;
+        this.query_name = "";
       },
       confirm_send(){
         var thisurl = window.location.href;
@@ -1629,22 +1632,7 @@
   background-position: center;
 }
 
-.alert_div{
-    z-index: 5000;
-    top: 50%;
-    left: 20%;
-    position: fixed;
-    background: #ffffff;
-    color: #303030;
-    min-height: 1.5rem;
-    width: 60%;
-    border-radius: 0.4rem;
-    font-size: 0.5rem;
-    text-align: center;
-    padding: 0.5rem 0.4rem;
-    line-height: 0.5rem;
-    font-weight: normal;
-}
+
 /* 加载中动画 */
 .loading{
   position: absolute;

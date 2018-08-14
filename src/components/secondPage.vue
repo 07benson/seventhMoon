@@ -47,10 +47,13 @@
       <button class="try_btn" @click="err_try()">点我试试？</button>
     </div>
 
+    <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
   </div>
 </template>
 <script>
   import * as types from '@/store/types'
+  import * as paic from '@/store/paic'
+  import App from "../assets/js/native.js"
   // 1、动态展示用户选择的主题
   export default {
     name: 'secondPage',
@@ -60,10 +63,14 @@
         gender: '',
         userName: '',
         is_popup:false,
+        alert_msg: "",
+        alert_display: false,
+        alert_setTimeOut: false,
       }
     },
     mounted(){
       this.theme = this.$route.query.name;
+      this.share_btn();
     },
     methods: {
       // 获取用户输入的姓名
@@ -126,7 +133,7 @@
         let gender = this.gender;
 
         if (!this.isChn(this.userName) || this.strLen(this.userName)<4) {
-          alert('请输入2～4个中文哟')
+          alert('请输入2～4个中文哟');
         } else {
           this.$router.push({path: '/thirdPage?rd='+Math.random(), query: {name: userName, themeId: themeId, gender: gender}});
         }
@@ -145,7 +152,44 @@
               return
             } 
           })
-        }
+      },      
+      share_btn() {//app右上角分享接口调用
+        var thisurl = window.location.href;
+        //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
+        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/firstPage";
+      
+        var self = this;
+        var obj = {
+            title: 'AI为你写诗，为你做不可能的事', // 分享标题
+            desc: '亲手制作一份专属情书送给Ta吧~', // 分享描述
+            description: '亲手制作一份专属情书送给Ta吧~', // 分享描述
+            link: linkUrl,
+            url: linkUrl,
+            imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            imageUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            bounce: false,//是否直接弹起native分享选择页
+            channel:"1,2,3"
+        };
+        var data = JSON.stringify(obj);
+        App.call("onMenuShare",data,function(res){
+            if(typeof res == "string"){
+                res = JSON.parse(res);
+            }
+            if(res.code == 1){
+              
+            }
+        });
+      },
+      alert(msg){
+         if( this.alert_setTimeOut ){
+           clearTimeout(this.alert_setTimeOut);
+         }
+         this.alert_display = true;
+         this.alert_msg = msg;
+         this.alert_setTimeOut = setTimeout(() => {
+                this.alert_display = false;
+            }, 2000);
+       }
     },
   }
 

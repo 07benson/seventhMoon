@@ -228,11 +228,12 @@
         poemUid: "",
         acrostic_item:[],
         blessings: "",
-        themeId: -1
+        themeId: -1,
       }
     },
     mounted(){
-      this.share_btn();
+      
+      
     },
     created(){
       this.getPoem();
@@ -250,6 +251,7 @@
           this.theme_title = response.data.themeTitle;
           this.themeId = response.data.themeId;
           this.sendRecordStatus();
+          this.share_btn();
         }))
       },
       sendRecordStatus(){
