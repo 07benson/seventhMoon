@@ -445,6 +445,7 @@
       // 调用快乐平安查询接口
       query_btn(){
 
+        let self = this;
         var queryname = this.query_name;
         if (queryname.length<1) {
           this.alert('请输入2～4个中文哟');
@@ -482,7 +483,7 @@
           
         }).catch(err => {
           console.log(err);
-          
+          self.alert(err);
         })
       },
       cancel_query(){
