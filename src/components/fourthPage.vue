@@ -573,8 +573,8 @@
             description: '也邀请你一起鉴赏哦~！', // 分享描述
             link: linkUrl,
             url: linkUrl,
-            imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
-            imageUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            imgUrl: paic.shareUrl, // 分享图标
+            imageUrl: paic.shareUrl, // 分享图标
             bounce: false,//是否直接弹起native分享选择页
             channel:"1,2,3"
         };

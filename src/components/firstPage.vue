@@ -1,32 +1,92 @@
 <template>
-  <div id="first-page">
-    <img class="bg-img" src="../assets/img/page_0/bg00.png"/>
+<div id="first-page">
+  <div class="first_page">
+    <img class="bg-img animated delay-1s" :class="{ 'fadeOut': p0_bg_fadeOut }" src="../assets/img/page_0/bg00.png"/>
+    <img class="bg-img animated" v-show="p1_bg_fadeIn" :class="{ 'fadeIn': p1_bg_fadeIn }" src="../assets/img/page_1/bg01.png"/>
     <div class="content_box">
       <div class="circle_box">
-        <div class="round" v-for="(item,index) in typeList" :key="index"
+        <div class="round"  v-for="(item,index) in typeList" :key="index"
+            :class="['round_'+index,{'to_center':circleActive}]"
              @click="circleClick(item)">
           <div class="circle">{{item.name}}</div>
           <div class="radio" :class="'radio_'+index.toString()"></div>
         </div>
       </div>
-      <div class="moon animated delay-1s" :class="{'fadeOut':circleActive}"></div>
-      <div class="left_darkhill"></div>
+      <div class="moon animated " :class="{'fadeOut':circleActive}"></div>
+      <div class="man " :class="{'man_out':circleActive}"></div>
+      <div class="girl " :class="{'girl_out':circleActive}"></div>
+      <div class="bridge-shadow animated " :class="{'fadeOut':circleActive}"></div>
+      <div class="bridge animated " :class="{'fadeOut':circleActive}"></div>
+      <div class="left-cloud animated" :class="{'slideOutLeft':circleActive}"></div>
+      <div class="right-cloud animated" :class="{'slideOutRight':circleActive}"></div>
+      <div class="bottom-cloud2 animated" :class="{ 'fadeOutDown':circleActive }"></div>
+      <div class="bottom-cloud1 animated" :class="{ 'fadeOutDown':circleActive }"></div>
+      <div class="left_darkhill animated" :class="{ 'fadeOut':circleActive }"></div>
       <div class="right_darkhill"></div>
-      <div class="left_lighthill"></div>
+      <div class="left_lighthill " :class="{'left_lighthill_move':circleActive}"></div>
       <div class="right_lighthill"></div>
-      <div class="bird-left"></div>
-      <div class="bird-right"></div>
-      <div class="man" :class="{'slideOutLeft':circleActive}"></div>
-      <div class="girl" :class="{'slideOutRight':circleActive}"></div>
-      <div class="bridge-shadow animated delay-1s" :class="{'fadeOut':circleActive}"></div>
-      <div class="bridge animated delay-1s" :class="{'fadeOut':circleActive}"></div>
-      <div class="left-cloud" :class="{'slideOutLeft':circleActive}"></div>
-      <div class="right-cloud" :class="{'slideOutRight':circleActive}"></div>
-      <div class="bottom-cloud2"></div>
-      <div class="bottom-cloud1"></div>
-    </div>
+      <div class="bird-left animated" :class="{'fadeOut':circleActive}"></div>
+     </div>
+  </div>
+  <div class="second_page" v-show="circleActive">
+    <div class="content_box">
+      <div class="top_lamination">
+        <div class="top_relative">
+          <div class="main_div "  :class="{'main_div_out':thirdActive}">
+            <div class="bd bd_0"></div>
+            <div class="round round_0 " :class="{'circle_reduce':thirdActive}">
+              <div class="radio radio_0" :class="{'circle_reduce':thirdActive}"></div>
+            </div>
+            <div class="circle circle_0" :class="{'circle_reduce':thirdActive}">{{ theme }}</div>
+            
+            <div class="btn_box btn_box_0">
+              <div class="man man_0" :class="{'man_1':gender=='male'}" @click="confirmGender('male')"></div>
+              <div class="woman woman_0" :class="{'woman_1':gender=='female'}" @click="confirmGender('female')"></div>
+              <input v-model="userName" type="text" placeholder="Ta的姓名或昵称" v-on:input="guessGender($event)">
+              <button @click="getKeywordList()">AI Go</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!---->
+      <div class="circle_box"></div>
+      <div class="bottom_darkhill bottom_darkhill_0"></div>
+      <div class="top_cloud"></div>
+      <div class="left_darkhill_second animated" :class="{'fadeIn':circleActive}"></div>
+      <div class="right_darkhill"></div>
+      <!--<div class="left_lighthill"></div>-->
+      <div class="right_lighthill"></div>
+      <!--<div class="bird-left"></div>-->
+      <div class="left-cloud left-cloud_0"></div>
+      <div class="right-cloud"></div>
       
-    <div class="err_popup" :class="{'popup_win':is_popup}">
+      <div class="moon_second moon_second_active" :class="{'moon_second_out':thirdActive}"></div>
+      <div class="bird_0"></div>
+    </div>
+   </div>
+  <div class="third_page" v-show="thirdActive">
+    <div class="content_box">
+      <div class="circle_box">
+        <div class="round" :class="'circle_'+index.toString()" v-for="(item,index) in keywordList" :key="index"
+             @click="kwSelect(item)">
+          <div class="circle" :class="{'is-selected':item.selected}">
+            <template v-if="item.name.length < 4">
+              <div class="keyword_text">{{item.name}}</div>
+            </template>
+            <template v-if="item.name.length == 4">
+              <div class="keyword_text_4">{{item.name}}</div>
+            </template>
+            
+          </div>
+          <div class="radio" :class="'radio_'+index.toString()"></div>
+        </div>
+        <button class="ai-area" @click="nextPage()">AI Go</button>
+       </div>
+      
+     </div>
+   </div>
+    
+  <div class="err_popup" :class="{'popup_win':is_popup}">
       <div class="crowding_img_div">
         <img class="crowding_img" src="../assets/img/crowding.png"/>
       </div>
@@ -37,38 +97,121 @@
       <div class="try_btn_div">
         <button class="try_btn" @click="err_try()">我要挤一挤</button>
       </div>
-      
-    </div>
-
-    <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
-
-  </div>
+   </div>
+  <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
+  <div class="loading" v-show="loading_display">
+      <div class="l_center">
+        <img class="loading_img" src="../assets/img/loading.gif"/>
+      </div>
+   </div>
+   <div class="bird-right " :class="{'bird_right_move':circleActive,'bird_right_out':thirdActive}"></div>
+</div>  
 </template>
 <script>
   import * as types from '@/store/types'
   import * as paic from '@/store/paic'
   import App from "../assets/js/native.js"
+  import '../style/firstPage.css'
 
   export default {
     name: 'firstPage',
     data(){
       return {
         circleActive: false,
+        thirdActive: false,
         typeList: [],
         is_popup:false,
+        loading_display:false,
         alert_msg: "",
         alert_display: false,
         alert_setTimeOut: false,
-      }
-    },
+        p0_bg_fadeOut:false,
+        p1_bg_fadeIn:false,
+        //secondPage params
+        themeId: -1,
+        theme: '',
+        gender: '',
+        userName: '',
+        //thirdPage params
+        selectKeywords: 0,
+        keywordList: [],
+        acrosticUid:'',
+        selecteId:[],
+       }
+     },
     methods: {
+      getTheme(){
+        this.loading_display = true;
+        this.$get(types.getTheme).then(
+          (response => {
+            this.typeList = response['listData'];
+            this.loading_display = false;
+          })
+        ).catch(err => {
+          if (err != null) {
+            this.is_popup = true;
+            this.loading_display = false;
+          }
+        });
+      },
+      getKeywordList(){
+        
+        if (!this.isChn(this.userName) || this.strLen(this.userName)<4) {
+          this.alert('请输入2～4个中文哟');
+          return;
+        }
+        let self = this;
+        let userName = self.userName;
+        let themeId = self.themeId;
+        let gender = self.gender;
+        // 发请求做诗请求，带参数name，gender，themeId
+        //{name: userName, themeId: themeId, gender: gender}
+        this.loading_display = true;
+        var model = {
+          'name': userName,
+          'themeId': themeId,
+          'gender': gender
+        };
+        console.log(model);
+        self.$get(types.getKeyword, model).then((response => {
+          self.keywordList = response.data.KeywordList;
+          self.acrosticUid = response.data.acrosticUid;;
+          
+          self.loading_display = false;
+          self.thirdActive = true;
+          editTitle('请选1～3个祝福球');
+        })).catch(err => {
+          if (err != null) {
+            self.is_popup = true
+          }
+          self.loading_display = false;
+        })
+      },
+      nextPage(){
+        if (this.selectKeywords <= 0) {
+          this.alert('请选1～3个祝福球哟！');
+          return;
+        }
+        
+        let themeId = this.themeId;
+        let keywordIds = this.selecteId.join(',');
+        let acrosticUid = this.acrosticUid;
+
+        let params = {
+          'themeId':themeId,
+          'keywordIds':keywordIds,
+          'acrosticUid':acrosticUid
+          };
+        this.$router.push({path: '/fourthPage?rd='+Math.random(), query: params});
+      },
       circleClick(item){
         var self = this;
+        self.theme = item.name;
+        self.themeId = item.id;
+        self.p0_bg_fadeOut = true;
+        self.p1_bg_fadeIn = true;
         self.circleActive = true;
-        setTimeout(function () {
-          self.$router.push({path: '/secondPage?rd='+Math.random(), query: item})
-
-        }, 1000);
+        editTitle('输入想传达新意的Ta的姓名或昵称');
       },
 
       err_try(){
@@ -85,7 +228,7 @@
           })
       },
       upload_pv(url){
-       
+        let self = this;
         let upload_data = {
           'url' : url
         };
@@ -104,9 +247,9 @@
           if(response.code == "200"){
             
           }else if(response.code == "606"){  
-            this.alert("登录态已过期，请重新登录试试");
+            self.alert("登录态已过期，请重新登录试试");
           }else{
-            this.alert(response.message);
+            self.alert(response.message);
           }
         }).catch(err => {
           console.log(err);
@@ -114,9 +257,7 @@
       },
       //app右上角分享接口调用
       share_btn() {
-        //this.alert("执行分享接口修改")
         var thisurl = window.location.href;
-        //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
         var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/firstPage";
       
         var self = this;
@@ -126,8 +267,8 @@
             description: '亲手制作一份专属情书送给Ta吧~', // 分享描述
             link: linkUrl,
             url: linkUrl,
-            imgUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
-            imageUrl: 'http://peimc-smp-stg.pa18.com/peimcnl/celebration/dist/share.png', // 分享图标
+            imgUrl: paic.shareUrl, // 分享图标
+            imageUrl: paic.shareUrl, // 分享图标
             bounce: false,//是否直接弹起native分享选择页
             channel:"1,2,3"
         };
@@ -142,313 +283,112 @@
             
         });
        },
-       upload_click(){
+      upload_click(){
          let button = this.$route.query.button;
          if(button==1){
            this.upload_pv('/2018/aug/loveletter/homeButtonClickNum');
          }
        },
-       alert(msg){
+      alert(msg){
          if( this.alert_setTimeOut ){
            clearTimeout(this.alert_setTimeOut);
          }
          this.alert_display = true;
          this.alert_msg = msg;
+         let self = this;
          this.alert_setTimeOut = setTimeout(() => {
-                this.alert_display = false;
+                self.alert_display = false;
             }, 2000);
-       }
+       },
+      // 获取用户输入的姓名
+      guessGender(e){
+        var self = this;
+        // 要判断输入两个字以上再发请求，只支持中文
+        var ischn = this.isChn(this.userName),
+            len = this.strLen(this.userName);
 
-    },
+        if (len>=4 && ischn && len<=8) {
+          this.$get(types.getGender, {name: this.userName}).then((response => {
+            let genderRes = response.data.gender;
+            self.gender = genderRes;
+          })).catch(err => {
+        if (err != null) {
+          this.is_popup = true
+        }
+      })
+        } else if (len>8) {
+          this.userName = this.userName.substring(0,4);
+        } else {
+          return
+        }
+      },
+
+      strLen(str){
+        var len = 0;
+        for (var i=0; i<str.length; i++) { 
+        var c = str.charCodeAt(i); 
+        //单字节加1 
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) { 
+          len++; 
+          } else { 
+            len+=2; 
+            } 
+          } 
+        return len;
+      },
+
+
+      // 中文判断
+      isChn(str){
+          var reg=/^[\u3220-\uFA29]+$/;
+          if (!reg.test(str)){
+            return false ;
+          } else {
+            return true ;
+          }
+      },
+
+      // 3、获取用户选择的性别值
+      confirmGender(gender){
+        this.gender = gender;
+      },
+      // 此处需实现点击关键词改变样式
+      kwSelect(item){
+        this.selectKeywords = this.selectKeywords + (item.selected ? -1 : 1);
+        this.createSeletedID(item['id']);
+        this.$set(item, 'selected', !item.selected);
+        
+        if (this.selectKeywords > 3) {
+          this.alert('请选1～3个祝福球哟！');
+          this.selectKeywords = this.selectKeywords + (item.selected ? -1 : 1);
+          this.createSeletedID(item['id'])
+          this.$set(item, 'selected', !item.selected);
+          return;
+        }
+      },
+      createSeletedID(keywordid){
+        if (this.selecteId.length <=3) {
+          var index = this.selecteId.indexOf(keywordid);
+          if (this.selecteId.indexOf(keywordid) > -1) {
+            // 删除keywordid
+            this.selecteId.splice(index,1)
+          } else{
+            this.selecteId.push(keywordid);
+          };
+        } else{
+          this.selecteId.pop();
+        }
+      },
+     },
     mounted(){
       this.share_btn();
       this.upload_pv('/2018/aug/loveletter/home');//上报访问
       this.upload_click();//上报二级菜单点击量
-      this.$get(types.getTheme).then(
-        (response => {
-          this.typeList = response['listData'];
-        })
-      ).catch(err => {
-        if (err != null) {
-          this.is_popup = true
-        }
-      });
+      this.getTheme();//获取主题列表
     }
 
-  }
+   }
 </script>
 <style scoped>
-  .circle {
-    position: relative;
-    left: 2px;
-    top: 2.2px;
-    z-index: 500;
-    font-size: 0.45rem;
-    letter-spacing:0.04rem;
-  }
-
-  .radio {
-    left: -3%;
-    top: -3%;
-  }
-
-  .round {
-    width: 200px;
-    height: 200px;
-  }
-
-  .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  .content_box {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    z-index: 1;
-  }
-
-  /*五个圆圈定位*/
-  .round:nth-child(1) {
-    /*left: 150px;*/
-    margin-left: -236px;
-    top: 80px;
-  }
-
-  .round:nth-child(2) {
-    margin-left: 67px;
-    /*left: 310px;*/
-    top: 80px;
-  }
-
-  .round:nth-child(3) {
-    margin-left: -70px;
-    /*left: 280px;*/
-    top: 264px;
-  }
-
-  .round:nth-child(4) {
-    /*left: 150px;*/
-    margin-left: -246px;
-    top: 458px;
-  }
-
-  .round:nth-child(5) {
-    margin-left: 127px;
-    /*left: 310px;*/
-    top: 458px;
-  }
-
-  .radio_0 {
-    animation: radio 2.5s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .radio_1 {
-    animation: radio 3s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .radio_2 {
-    animation: radio 3.5s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .radio_3 {
-    animation: radio 4s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .radio_4 {
-    animation: radio 5s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .radio_5 {
-    animation: radio 1s ease-out;
-    animation-iteration-count: infinite;
-  }
-
-  .moon {
-    position: absolute;
-    width: 670px;
-    height: 456px;
-    bottom: 210px;
-    background-image: url('../assets/img/page_0/moon@2x.png');
-    background-size: 100% auto;
-    z-index: 10;
-  }
-
-  .bridge {
-    position: absolute;
-    bottom: 200px;
-    width: 579px;
-    height: 108px;
-    background-image: url('../assets/img/page_0/bird_bridge@2x.png');
-    background-size: 100% auto;
-    z-index: 15;
-  }
-
-  .bridge-shadow {
-    position: absolute;
-    bottom: 100px;
-    width: 579px;
-    height: 108px;
-    background-image: url('../assets/img/page_0/bird_bridge_shadow@2x.png');
-    background-size: 100% auto;
-    z-index: 15;
-  }
-
-  .man {
-    position: absolute;
-    /*left: -10px;*/
-    margin-left: -50px;
-    bottom: 300px;
-    width: 115px;
-    height: 216px;
-    background-image: url('../assets/img/page_0/man@2x.png');
-    background-size: 100% auto;
-    z-index: 30;
-  }
-
-  .girl {
-    position: absolute;
-    margin-left: 85px;
-    bottom: 300px;
-    width: 172px;
-    height: 205px;
-    background-image: url('../assets/img/page_0/girl@2x.png');
-    background-size: 100% auto;
-    z-index: 30;
-  }
-
-  .left-cloud {
-    position: absolute;
-    width: 201px;
-    height: 74px;
-    margin-left: -230px;
-    bottom: 180px;
-    background-image: url('../assets/img/page_0/cloud_left@2x.png');
-    background-size: 100% auto;
-    z-index: 20;
-  }
-
-  .right-cloud {
-    /*display: none;*/
-    position: absolute;
-    width: 201px;
-    height: 74px;
-    margin-left: 252px;
-    bottom: 190px;
-    background-image: url('../assets/img/page_0/cloud_right@2x.png');
-    background-size: 100% auto;
-    z-index: 20;
-  }
-
-  .bird-left {
-    position: absolute;
-    width: 68px;
-    height: 61px;
-    bottom: 480px;
-    margin-left: -220px;
-    /*left: 7%;*/
-    background-image: url('../assets/img/page_1/bird02@2x.png');
-    background-size: 100% auto;
-    z-index: 20;
-  }
-
-  .bird-right {
-    position: absolute;
-    width: 69px;
-    height: 55px;
-    bottom: 420px;
-    margin-left: 220px;
-    /*left: 7%;*/
-    background-image: url('../assets/img/page_1/bird01@2x.png');
-    background-size: 100% auto;
-    z-index: 20;
-  }
-
-  .bottom-cloud1 {
-    position: absolute;
-    bottom: 5px;
-    /*left: 0;*/
-    width: 105%;
-    height: 51px;
-    background-image: url('../assets/img/page_0/button01@2x.png');
-    background-size: 100% auto;
-    z-index: 20;
-  }
-
-  .bottom-cloud2 {
-    position: absolute;
-    bottom: 5px;
-    /*left: 0;*/
-    width: 105%;
-    height: 63px;
-    background-image: url('../assets/img/page_0/button02@2x.png');
-    background-size: 100% auto;
-    z-index: 15;
-  }
-
-  .left_darkhill {
-    background-image: url('../assets/img/page_0/hill02@2x.png');
-  }
-
-  .right_darkhill {
-    background-image: url('../assets/img/page_0/hill01@2x.png');
-  }
-
-  .left_lighthill {
-    background-image: url('../assets/img/page_0/hill03@2x.png');
-  }
-
-  .right_lighthill {
-    background-image: url('../assets/img/page_0/hill04@2x.png');
-  }
-
-  @keyframes slideOutLeft {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-
-    to {
-      transform: translate3d(-300%, 0, 0);
-      visibility: hidden;
-    }
-  }
-
-  .slideOutLeft {
-    animation-name: slideOutLeft;
-    animation-iteration-count: 1;
-    animation-duration: 1s;
-  }
-
-  @keyframes slideOutRight {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-
-    to {
-      transform: translate3d(200%, 0, 0);
-      visibility: hidden;
-    }
-  }
-
-  .slideOutRight {
-    animation-name: slideOutRight;
-    animation-iteration-count: 1;
-    animation-duration: 1s;
-  }
-
-  .popup_win {
-    display: block
-  }
-
+ 
 </style>
