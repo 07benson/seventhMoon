@@ -329,6 +329,11 @@
     },
     created(){
       this.getPoem();
+      var ua = window.navigator.userAgent.toLowerCase();
+      if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+        this.send_btn_display = false;
+        this.edit_btn_display = false;
+      }
     },
     methods: {
       getPoem(){
@@ -448,7 +453,8 @@
         let self = this;
         var queryname = this.query_name;
         if (queryname.length<1) {
-          this.alert('请输入2～4个中文哟');
+          this.alert('请输入Ta的姓名/UM号');
+          return;
         }
         let queryname_data = {
           "name":queryname
@@ -476,6 +482,10 @@
             }
             this.um_list_display = true;
             this.um_input_display = false;
+          }else if(response.code == "606"){
+            this.alert("登录态已过期，请重新登录试试");
+          }else if(response.code == "702"){
+            this.msg_display = true;
           }else{
             this.alert(response.message);
             //TODO 

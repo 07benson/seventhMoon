@@ -41,7 +41,7 @@
             
             <div class="btn_box btn_box_0">
               <div class="man man_0" :class="{'man_1':gender=='male'}" @click="confirmGender('male')"></div>
-              <div class="woman woman_0" :class="{'woman_1':gender=='female'}" @click="confirmGender('female')"></div>
+              <div class="woman woman_0" :class="{'woman_on':gender=='female'}" @click="confirmGender('female')"></div>
               <input v-model="userName" type="text" placeholder="Ta的姓名或昵称" v-on:input="guessGender($event)">
               <button @click="getKeywordList()">AI Go</button>
             </div>
@@ -351,6 +351,7 @@
       // 3、获取用户选择的性别值
       confirmGender(gender){
         this.gender = gender;
+        console.log(gender);
       },
       // 此处需实现点击关键词改变样式
       kwSelect(item){

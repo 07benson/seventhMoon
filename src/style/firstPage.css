@@ -507,18 +507,7 @@
     z-index: 0;
   }
 
-  /*
-  .second_page .bird_0 {
-    width: 69px;
-    height: 56px;
-    position: absolute;
-    top: 39%;
-    left: 14%;
-    background-image: url('../assets/img/page_0/bird01@2x.png');
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-  }
-*/
+
   .second_page .moon_second_active {
     animation: moon_second_active 0.5s alternate forwards;
     animation-iteration-count: 1;
@@ -741,7 +730,7 @@
     }
   }
 
-.second_page .man_0 {
+.second_page .btn_box .man_0 {
     animation-name: man;
     animation-iteration-count: 3;
     animation-duration: 0.2s;
@@ -757,9 +746,11 @@
     }
   }
 
-.second_page .man_1 {
+.second_page .btn_box .man_1 {
     animation: man_1 0.1s forwards;
   }
+
+
 
 .second_page .btn_box .woman {
     position: absolute;
@@ -772,7 +763,7 @@
     z-index: -1;
   }
 
-.second_page .woman_0 {
+.second_page .btn_box .woman_0 {
     animation-name: woman;
     animation-iteration-count: 3;
     animation-duration: 0.2s;
@@ -787,18 +778,24 @@
       top: 40%;
     }
  }
-@keyframes woman_1 {
+.second_page .btn_box .woman_on {
+    animation: woman_on 0.1s;
+    -moz-animation: woman_on 0.1s;	/* Firefox */
+    -webkit-animation: woman_on 0.1s;	/* Safari 和 Chrome */
+    -o-animation: woman_on 0.1s;	/* Opera */
+    animation-fill-mode : forwards;
+    background-size: 100% auto;
+    background-image: url('../assets/img/page_1/gender_female_selected@2x.png') !important;
+ }
+@keyframes woman_on {
     0% {
       top: 48%;
     }
     100% {
       top: 40%;
-      background-image: url('../assets/img/page_1/gender_female_selected@2x.png')
     }
  }
-.woman_1 {
-    animation: woman_1 0.1s forwards;
- }
+
 
 /*===========================================third page=============================================*/
 
@@ -836,6 +833,7 @@
     height: 140px;
     left: -3%;
     top: -3%;
+    overflow: visible;
   }
 
   /* 选中后的选中效果 */
