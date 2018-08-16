@@ -1546,7 +1546,7 @@
 .um_list_box .query_list .result_item .um_department {
     display: inline-block;
     margin-top: 0.2rem;
-    font-size: 0.4rem;
+    font-size: 0.28rem;
     color: #989898; 
 }
 
