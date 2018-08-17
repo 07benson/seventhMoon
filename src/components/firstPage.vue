@@ -199,13 +199,15 @@
         let userName = self.userName;
         let themeId = self.themeId;
         let gender = self.gender;
+        let rd = Math.random();
         // 发请求做诗请求，带参数name，gender，themeId
         //{name: userName, themeId: themeId, gender: gender}
         this.loading_display = true;
         var model = {
           'name': userName,
           'themeId': themeId,
-          'gender': gender
+          'gender': gender,
+          'rd': rd
         };
         console.log(model);
         self.$get(types.getKeyword, model).then((response => {

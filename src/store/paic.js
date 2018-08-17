@@ -1,5 +1,7 @@
 //test
-const domain = 'http://peimc-smp-stg.pa18.com';
+//const domain = 'http://peimc-smp-stg.pa18.com';
+//prod
+const domain = 'http://peimc-smp.pa18.com';
 
 export const queryEmpInfo = domain+'/peimc_smp/rest/loveLetter/queryEmpInfo';
 export const sendLoveLetter = domain+'/peimc_smp/rest/loveLetter/sendLoveLetter';

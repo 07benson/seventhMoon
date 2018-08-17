@@ -50,6 +50,7 @@
       </div>
       -->
       <!--<div class="edit_btn"></div>-->
+      <div class="return_home" @click="toIndex()"><div class="return_home_text">写诗</div></div>
     </div>
     <div class="lamination_bg_element">
       <template v-if="this.themeId == 0">
@@ -282,6 +283,9 @@
         }).catch(err => {
           console.log(err);
         });
+      },
+      toIndex(){
+        this.$router.push({path: '/firstPage?rd='+Math.random()});
       },
       //app右上角分享接口调用
       share_btn() {
@@ -1038,6 +1042,26 @@
 .theme_9_posiction .bg_floor_right .bg_floor_right_img{
   width: 6.8rem;
   max-width: 50vh;
+}
+
+.return_home{
+    position: fixed;
+    right: 3%;
+    bottom: 1.5%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+    background: #ffffff;
+    color: #2c3e50;
+    opacity: 0.4;
+}
+.return_home_text{
+    font-size: 0.4rem;
+    width: 100%;
+    height: 100%;
+    line-height: 1.5rem;
+    text-align: center;
+    font-weight: bold;
 }
 
 </style>
