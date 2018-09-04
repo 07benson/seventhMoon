@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import firstPage from '@/components/firstPage'
 import fourthPage from '@/components/fourthPage'
 import showPage from '@/components/showPage'
+import canvasPage from '@/components/canvasPage'
 import VueWechatTitle from 'vue-wechat-title'
 
 Vue.use(Router);
@@ -32,6 +33,12 @@ export default new Router({
       name: 'showPage',
       component: showPage,
       meta:{title:'一封来自Ta的诗'}
+    },
+    {
+      path: '/canvasPage',
+      name: 'canvasPage',
+      component: canvasPage,
+      meta:{title:'canvasPage'}
     }
   ]
 })

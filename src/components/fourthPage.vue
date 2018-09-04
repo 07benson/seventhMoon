@@ -2,19 +2,25 @@
   <div id="fourth-page">
     <template v-if="this.themeId == 0">
       <img class="bg-img" src="../assets/img/page_4/theme_0/bg.png"/>
+      <img id="canvas_bg" style="display:none;" src="../assets/img/0.png"/>
     </template>
     <template v-if="this.themeId == 1">
       <img class="bg-img" src="../assets/img/page_4/theme_1/bg.png"/>
+      <img id="canvas_bg" style="display:none;" src="../assets/img/1.png"/>
     </template>
     <template v-if="this.themeId == 4">
      <img class="bg-img" src="../assets/img/page_4/theme_4/bg.png"/>
+     <img id="canvas_bg" style="display:none;" src="../assets/img/4.png"/>
     </template>
     <template v-if="this.themeId == 5">
       <img class="bg-img" src="../assets/img/page_4/theme_5/bg.png"/>
+      <img id="canvas_bg" style="display:none;" src="../assets/img/5.png"/>
     </template>
     <template v-if="this.themeId == 9">
       <img class="bg-img" src="../assets/img/page_4/theme_9/bg.png"/>
+      <img id="canvas_bg" style="display:none;" src="../assets/img/9.png"/>
     </template>
+    <img id="qrcode" style="display:none;" src="../assets/img/qrcode.png"/>
 
     <div class="content_box">
       <div class="box_top">
@@ -46,7 +52,7 @@
       </div>
       
       <div  class="box_bottom" v-show="send_btn_display">
-        <div class="send_btn" @click="doShare()">发送给Ta</div>
+        <div class="send_btn" @click="show_image()">生成卡片</div>
       </div>
       <div v-show="edit_btn_display" class="edit_btn" @click="editWindow()"></div>
     </div>
@@ -65,54 +71,6 @@
       <button class="cancel_btn" @click="cancelEdit()">取消</button>
     </div>
 
-    <div v-show="um_input_display" class="query_div">
-      <div  class="um_input_box">
-        <div class="center_div">
-          <div class="box_top">请输入Ta的姓名/UM号</div>
-          <div class="box_center"><input type="text" v-model="query_name" ></div>
-          <div v-show="msg_display" class="box_msg">找不到Ta，您可能输错了哦</div>
-          <div class="box_bottom">
-            <button @click="cancel_query()">取消</button>
-            <button class="confirm" @click="query_btn()">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-show="um_list_display" class="um_list_box">
-        <div class="query_content_div">
-          搜索“<span class="query_content">{{ query_name }}</span>”
-          <div class="um_list_box_close" @click="close_um_list_box()"></div>
-        </div>
-        <div class="query_list" >
-          <div class="result_item" v-for="(item,index) in query_res" :key="index" @click="select_item(index)">
-            <div>
-              <span class="um_name">{{ item.realName }}</span>
-              <span class="um_account">({{ item.umid }})</span>
-            </div>
-            <div>
-              <span class="um_department">{{ item.department }}</span>
-            </div>
-          </div>
-        </div>
-    </div>
-    <div class="send_confirm_div"  v-show="send_confirm_box_display">
-      <div class="send_confirm_box">
-        <div class="center_div">
-          <div class="box_top">递上情书</div>
-          <div class="box_center"><input type="text" v-model="confirm_name" readonly ></div>
-          <div class="box_check"  @click="checkbox_click()">
-            <div class="box_check_content">
-              <div class="checkbox" :class="{'checkbox_selected':checkbox_selected}"></div>
-              匿名发送
-            </div>
-          </div>
-          <div class="box_bottom">
-            <button @click="cancel_send()">取消</button>
-            <button class="confirm" @click="confirm_send()">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="lamination_bg_element">
       <template v-if="this.themeId == 0">
@@ -276,6 +234,13 @@
       </template>
     </div>
     
+    <div class="img_view_bg" v-show="image_view_display"></div>
+    <div class="img_view"  v-show="image_view_display" @click="hidden_image()">
+      <img id="image_view" v-bind:src="image_view_src" @click.stop=";" />
+      <div class="img_view_msg">长按图片保存/分享给好友</div>
+      <canvas id="canvas" width="750" height="1327" style="display:none;"></canvas>
+    </div>
+
     <div class="alert_div" v-show="alert_display">{{ alert_msg }}</div>
 
     <div class="loading" v-show="loading_display">
@@ -287,8 +252,6 @@
 </template>
 <script>
   import * as types from '@/store/types'
-  import * as paic from '@/store/paic'
-  import App from "../assets/js/native.js"
 
   export default {
     name: 'poem',
@@ -297,21 +260,12 @@
         selectKeywords: 0,
         theme_title: "",
         poemUid: "",
-        acrostic_item_0: "",
-        acrostic_item_1: "",
-        acrostic_item_2: "",
-        acrostic_item_3: "",
         blessings: "",
         acrostic_item:[],
         show:'',
         themeId: -1,
-        query_res:[],
-        query_name:'',
         send_btn_display: true,
         edit_btn_display: true,
-        um_input_display: false,
-        um_list_display: false,
-        msg_display:false,
         confirm_name: '',
         confirm_item_index: 0,
         send_confirm_box_display: false,
@@ -321,18 +275,22 @@
         alert_display: false,
         alert_setTimeOut: false,
         loading_display: false,
+        image_view_display: false,
+        image_view_src: "",
+        canvas: null,
+        canvas_finish: false,
       }
     },
     mounted(){
       this.themeId = this.$route.query.themeId;
-      
+      this.canvas =  document.getElementById("canvas");
     },
     created(){
       this.getPoem();
       var ua = window.navigator.userAgent.toLowerCase();
       if(ua.match(/MicroMessenger/i) == 'micromessenger'){
-        this.send_btn_display = false;
-        this.edit_btn_display = false;
+        //this.send_btn_display = false;
+        //this.edit_btn_display = false;
       }
     },
     methods: {
@@ -347,7 +305,6 @@
           this.acrostic_item = response.data.acrostic.slice(0,4);
           this.blessings = response.data.blessings;
           this.theme_title = response.data.themeTitle;
-          this.share_btn();
           // 将初始数据保存
           sessionStorage.setItem('poem',JSON.stringify(this.acrostic_item));
           sessionStorage.setItem('blessing',this.blessings);
@@ -394,10 +351,6 @@
       editWindow(){//打开编辑窗口
         this.show = 'show';
       },
-      doShare(){
-        this.um_input_display = true;
-      },
-
       strLen(str){
         var len = 0;
         for (var i=0; i<str.length; i++) { 
@@ -411,7 +364,6 @@
           } 
         return len;
       },
-
       confirmEdit(){
         var poemUid = this.poemUid;
         var acrostic = this.acrostic_item;
@@ -437,7 +389,6 @@
           sessionStorage.setItem('blessing',this.blessings);
         }))
       },
-
       cancelEdit(){
         this.show = 'hide';
         // 取消按钮就恢复原来数据
@@ -446,160 +397,7 @@
         this.acrostic_item = JSON.parse(acrostic);
         this.blessings = blessing;
       },
-
-      // 调用快乐平安查询接口
-      query_btn(){
-
-        let self = this;
-        var queryname = this.query_name;
-        if (queryname.length<1) {
-          this.alert('请输入Ta的姓名/UM号');
-          return;
-        }
-        let queryname_data = {
-          "name":queryname
-        };
-
-        let queryEmpInfoUrl = paic.queryEmpInfo;
-        let parms = "";
-        let cookie = document.cookie;
-        if(cookie.indexOf("hm_sessionid") != -1){
-            var loginsession = cookie.split("hm_sessionid=")[1];
-            loginsession = loginsession.split(";")[0];
-        }
-        if(App.IS_ANDROID){
-            parms = "?loginsession=" + loginsession;
-        }
-        queryEmpInfoUrl = queryEmpInfoUrl + parms;
-        this.msg_display = false;
-        this.$post(queryEmpInfoUrl,queryname_data).then(response => {
-          if(response.code == "200"){
-            console.log(response);
-            this.query_res = response.body;
-            if(this.query_res==null||this.query_res.length <1){
-                this.msg_display = true;
-                return;
-            }
-            this.um_list_display = true;
-            this.um_input_display = false;
-          }else if(response.code == "606"){
-            this.alert("登录态已过期，请重新登录试试");
-          }else if(response.code == "702"){
-            this.msg_display = true;
-          }else{
-            this.alert(response.message);
-            //TODO 
-          }
-          
-        }).catch(err => {
-          console.log(err);
-          self.alert(err);
-        })
-      },
-      cancel_query(){
-        this.um_input_display = false;
-        this.query_name = "";
-        this.msg_display = false;
-      },
-      close_um_list_box(){
-        this.um_list_display = false;
-      },
-      select_item(item_index){
-        console.log(this.query_res[item_index].realName);
-        this.confirm_item_index = item_index;
-        this.confirm_name = this.query_res[item_index].realName + '('+this.query_res[item_index].umid+')';
-        this.send_confirm_box_display = true;
-        this.um_list_display = false;
-      },
-      cancel_send(){
-        this.confirm_item_index = 0;
-        this.confirm_name = '';
-        this.send_confirm_box_display = false;
-        this.query_name = "";
-      },
-      confirm_send(){
-        var thisurl = window.location.href;
-        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
-      
-        console.log(linkUrl);
-        var isAnonymity = "1";
-        var loveLetterId = this.poemUid;
-        var toUmId = this.query_res[this.confirm_item_index].umid;
-        var toSex = this.query_res[this.confirm_item_index].sex;
-
-        if(this.checkbox_selected){
-          isAnonymity = "0";
-        }
-        let send_data = {
-          "isAnonymity":isAnonymity,
-          "linkUrl":linkUrl,
-          "loveLetterId":loveLetterId,
-          "toUmId":toUmId,
-          "toSex":toSex
-        };
-        let sendLoveLetterUrl = paic.sendLoveLetter;
-        let parms = "";
-        let cookie = document.cookie;
-        if(cookie.indexOf("hm_sessionid") != -1){
-            var loginsession = cookie.split("hm_sessionid=")[1];
-            loginsession = loginsession.split(";")[0];
-        }
-        if(App.IS_ANDROID){
-            parms = "?loginsession=" + loginsession;
-        }
-        sendLoveLetterUrl = sendLoveLetterUrl + parms;
-        console.log(sendLoveLetterUrl);
-        this.$post(sendLoveLetterUrl,send_data).then(response => {
-          if(response.code == "200"){
-            this.send_confirm_box_display = false;
-            this.edit_btn_display = false;
-            this.send_btn_display = false;
-            this.alert("发送成功");
-          }else if(response.code == "606"){  
-            this.alert("登录态已过期，请重新登录试试");
-          }else{
-            this.alert(response.message);
-          }
-        }).catch(err => {
-          console.log(err);
-        });
-      },
-      checkbox_click(){
-        if(this.checkbox_selected){
-          this.checkbox_selected = false;
-        }else{
-          this.checkbox_selected = true;
-        }
-      },
-      //app右上角分享接口调用
-      share_btn() {
-        var thisurl = window.location.href;
-        //var linkUrl = thisurl.substring(0,thisurl.indexOf('#'));
-        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/showPage?poemUid="+this.poemUid;
-      
-        var self = this;
-        var obj = {
-            title: 'Ta给我发送了一封专属定制的AI情书！', // 分享标题
-            desc: '也邀请你一起鉴赏哦~！', // 分享描述
-            description: '也邀请你一起鉴赏哦~！', // 分享描述
-            link: linkUrl,
-            url: linkUrl,
-            imgUrl: paic.shareUrl, // 分享图标
-            imageUrl: paic.shareUrl, // 分享图标
-            bounce: false,//是否直接弹起native分享选择页
-            channel:"1,2,3"
-        };
-        var data = JSON.stringify(obj);
-        App.call("onMenuShare",data,function(res){
-            if(typeof res == "string"){
-                res = JSON.parse(res);
-            }
-            if(res.code == 1){
-                console.log("share success");
-            }
-        });
-       },
-       alert(msg){
+      alert(msg){
          if( this.alert_setTimeOut ){
            clearTimeout(this.alert_setTimeOut);
          }
@@ -608,7 +406,73 @@
          this.alert_setTimeOut = setTimeout(() => {
                 this.alert_display = false;
             }, 2000);
-       }
+       },
+      //canvas 绘画竖排文字 包括是否绘画署名
+      vertical_r_to_l_text(ctx,x,y,text,fontsize,fontfamily,fontspace,color,linesize,linespace,signature){
+        ctx.font = fontsize+"px "+fontfamily;
+        ctx.fillStyle = color;
+        var char_array = text.split('');
+        var line_index = 0;
+        var index = 0;
+
+        for(var i=0;i<char_array.length;i++){
+          if((i+1)%linesize==0){
+            ctx.fillText(char_array[i], x-(linespace*line_index), y+(fontsize*index)+(fontspace*index));
+            line_index++;
+            index = 0;
+          }else{
+            ctx.fillText(char_array[i], x-(linespace*line_index), y+(fontsize*index)+(fontspace*index));
+            index++;
+          }
+        }
+        //绘画 AI作词 署名
+        if(signature == true){
+          line_index++;
+          ctx.fillText(" |", x - (line_index * linespace)-20 , y + fontsize * 9 + 12);
+          ctx.fillText("作", x - (line_index * linespace)-20 , y + fontsize * 12 + 12);
+          ctx.fillText("词", x - (line_index * linespace)-20 , y + fontsize * 13 + 12);
+          
+          //旋转AI两个字
+          ctx.translate( canvas.width, canvas.height/2);
+          ctx.rotate( Math.PI / 180 * 90);
+          ctx.fillText("A", canvas.height -  (y + fontsize * 16 + 8), canvas.width - (x - (line_index * linespace)-20));
+          ctx.fillText("I", canvas.height -  (y + fontsize * 16 + 8) + 25 , canvas.width - (x - (line_index * linespace)-20));
+        }
+       },
+      draw_canvas() {
+        let acrostic = this.acrostic_item;
+        let theme_title = this.theme_title;
+        let blessing = this.blessings;
+        let canvas = this.canvas;
+        let ctx = canvas.getContext("2d");
+        let image = document.getElementById('canvas_bg');
+        let qrcode = document.getElementById('qrcode');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, 750, 1327, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(qrcode, 0, 0, 150, 150, 50, 1127, 150, 150);
+        //绘画藏头诗
+        this.vertical_r_to_l_text(ctx,305,200,acrostic[0],46,"STXingkai",14,'#ffffff',acrostic[0].length,0,false);
+        this.vertical_r_to_l_text(ctx,237,200,acrostic[1],46,"STXingkai",14,'#ffffff',acrostic[0].length,0,false);
+        this.vertical_r_to_l_text(ctx,169,200,acrostic[2],46,"STXingkai",14,'#ffffff',acrostic[0].length,0,false);
+        this.vertical_r_to_l_text(ctx,101,200,acrostic[3],46,"STXingkai",14,'#ffffff',acrostic[0].length,0,false);
+        //绘画标题
+        this.vertical_r_to_l_text(ctx,480,240,theme_title,96,"STXingkai",24,'#fff',2,0,false);
+        //绘画祝福语
+        this.vertical_r_to_l_text(ctx,640,680,blessing,24,"Helvetica Neue",8,'#fff',12,52,true);
+       },
+      show_image(){
+        if(this.canvas_finish == false){
+          this.draw_canvas();  
+          this.image_view_src = this.canvas.toDataURL("image/png");
+          this.canvas_finish = true;
+        }
+        this.image_view_display = true;
+        this.edit_btn_display = false;
+       },
+      hidden_image(){
+        this.image_view_display = false;
+      } 
+
       
     },
 
@@ -1423,225 +1287,7 @@
 }
 
 
-/*----------------------------------     um查询        ---------------------------------*/
-.query_div {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 4000;
-  background: rgba(0, 0, 0, 0.55);
-}
-.query_div .um_input_box{
-  position: absolute;
-  width: 100%;
-  
-  bottom: 25%;
-  margin: 0 auto;
-  z-index: 4001;
-}
-.query_div .um_input_box .center_div{
-  color: #000000;
-  height: 100%;
-  width: 8rem;
-  margin: 0 auto;
-  border: 1px solid #333333;
-  border-radius: 0.2rem;
-  background: #ffffff;
-}
-.query_div .um_input_box .center_div .box_top{
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-}
-.query_div .um_input_box .center_div .box_center{
-  height: 1.4rem;
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-}
-.query_div .um_input_box .center_div .box_center input{
-  text-align: center;
-  padding: 0.1rem 0.5rem;
-  font-size: 0.53rem;
-  border: 1px solid #333333;
-  height: 1rem;
-  width: 88%;
-}
-.query_div .um_input_box .center_div .box_msg{
-  color: red;
-  font-size: 0.4rem;
-  text-align: center;
-  line-height: 0.6rem;
-  margin-bottom: 0.1rem;
-}
-.query_div .um_input_box .center_div .box_bottom{
-  height: 1.3rem;
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-  border-top: 1px solid #333333;
-}
-.query_div .um_input_box .center_div .box_bottom button{
-  height: 100%;
-  width: 49%;
-}
-.query_div .um_input_box .center_div .box_bottom .confirm{
-  border-left:1px solid #333333;
-}
-.um_list_box{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
-  z-index: 4002;
-}
-.um_list_box .query_content_div{
-  position: relative;
-  padding: 0.2rem 0.3rem 0.1rem 0.3rem;
-  height: 1.5rem;
-  font-size: 0.6rem;
-  line-height: 1.5rem;
-  background: #e4e4e4;
-}
-.um_list_box .query_content_div .um_list_box_close{
-  position: absolute;
-  bottom: 0.1rem;
-  right: 0.1rem;
-  width: 1rem;
-  height: 1rem;
-  line-height: 1rem;
-  text-align: center;
-  border-radius: 1.5rem;
-  color: #868686;
-  background-image: url("../assets/img/page_4/close.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 0.8rem;
-}
-.um_list_box .query_list{
-  height: calc(100% - 1.5rem);
-  overflow-y: scroll;
-}
-.um_list_box .query_list .result_item{
-  font-size: 0.36rem;
-  line-height: 0.5rem;
-  height: 2rem;
-  border-bottom: 1px solid #9b9b9b;
-  padding: 0.4rem 0.4rem;
-}
-.um_list_box .query_list .result_item .um_name{
-    font-size: 0.47rem;
-    color: #ff8d00;
-    font-weight: 500;
-}
-.um_list_box .query_list .result_item .um_account{
-    padding-left: 0.18rem;
-    font-size: 0.4rem;
-    color: #989898;
-}
-.um_list_box .query_list .result_item .um_department {
-    display: inline-block;
-    margin-top: 0.2rem;
-    font-size: 0.28rem;
-    color: #989898; 
-}
 
-.send_confirm_div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 4005;
-}
-.send_confirm_div .send_confirm_box{
-  position: absolute;
-  width: 100%;
-  bottom: 25%;
-  margin: 0 auto;
-  z-index: 4006;
-}
-.send_confirm_div .send_confirm_box .center_div{
-  color: #000000;
-  height: 100%;
-  width: 8rem;
-  margin: 0 auto;
-  border: 1px solid #333333;
-  border-radius: 0.2rem;
-  background: #ffffff;
-}
-.send_confirm_div .send_confirm_box .center_div .box_top{
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-}
-.send_confirm_div .send_confirm_box .center_div .box_center{
-  height: 1.2rem;
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-}
-.send_confirm_div .send_confirm_box .center_div .box_center input{
-  text-align: center;
-  padding: 0.1rem 0.5rem;
-  font-size: 0.43rem;
-  border: 1px solid #333333;
-  height: 1rem;
-  width: 88%;
-}
-.send_confirm_div .send_confirm_box .center_div .box_check{
-  width: 100%;
-  color: #333333;
-  font-size: 0.4rem;
-  text-align: center;
-  height: 1rem;
-  margin-bottom: 0.2rem;
-}
-.send_confirm_div .send_confirm_box .center_div .box_check_content{
-  position: relative;
-  margin: 0 auto;
-  height: 1rem;
-  width: 2rem;
-  line-height: 0.8rem;
-}
-
-
-.send_confirm_div .send_confirm_box .center_div .box_bottom{
-  height: 1.3rem;
-  text-align: center;
-  font-size: 0.4rem; 
-  line-height: 1rem;
-  border-top: 1px solid #333333;
-}
-.send_confirm_div .send_confirm_box .center_div .box_bottom button{
-  height: 100%;
-  width: 49%;
-}
-.send_confirm_div .send_confirm_box .center_div .box_bottom .confirm{
-  border-left:1px solid #333333;
-}
-.send_confirm_div .send_confirm_box .checkbox{
-  position: absolute;
-  left: -0.8rem;
-  top: 0;
-  height: 0.8rem;
-  width: 0.8rem;
-  display: inline-block;
-  border-radius: 0.6rem;
-  background-image: url("../assets/img/page_4/checkbox_off.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.send_confirm_div .send_confirm_box .checkbox_selected{
-  background-image: url("../assets/img/page_4/checkbox_on.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
 
 
 /* 加载中动画 */
@@ -1667,4 +1313,45 @@
   
 }
 
+
+/* canvas绘画图片*/
+    .img_view_bg{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      opacity: 0.8;
+      z-index: 4850;
+    }
+    .img_view{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      z-index: 4851;
+      text-align: center;
+      overflow: auto;
+    }
+    .img_view img {
+      width: 75%;
+      position:absolute;
+      left:50%;
+      top:50%;
+      -webkit-transform:translate(-50%,-50%);
+      -moz-transform:translate(-50%,-50%);
+      transform:translate(-50%,-50%);
+      z-index: 4852;
+    }
+    .img_view_msg {
+      color: #ffffff;
+      position: absolute;
+      bottom: 5%;
+      width: 100%;
+      text-align: center;
+      font-size: 0.5rem;
+      font-weight: bold;
+    }
 </style>

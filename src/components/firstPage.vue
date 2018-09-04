@@ -109,8 +109,6 @@
 </template>
 <script>
   import * as types from '@/store/types'
-  import * as paic from '@/store/paic'
-  import App from "../assets/js/native.js"
   import '../style/firstPage.css'
 
   export default {
@@ -188,9 +186,7 @@
         }   
       }
     },
-
-      getKeywordList(){
-        
+    getKeywordList(){
         if (!this.isChn(this.userName) || this.strLen(this.userName)<4) {
           this.alert('请输入2～4个中文哟');
           return;
@@ -264,67 +260,11 @@
             }
           })
       },
-      upload_pv(url){
-        let self = this;
-        let upload_data = {
-          'url' : url
-        };
-        let uploadPvUrl = paic.uploadPv;
-        let parms = "";
-        let cookie = document.cookie;
-        if(cookie.indexOf("hm_sessionid") != -1){
-            var loginsession = cookie.split("hm_sessionid=")[1];
-            loginsession = loginsession.split(";")[0];
-        }
-        if(App.IS_ANDROID){
-            parms = "?loginsession=" + loginsession;
-        }
-        uploadPvUrl = uploadPvUrl + parms;
-        this.$post(uploadPvUrl,upload_data).then(response => {
-          if(response.code == "200"){
-            
-          }else if(response.code == "606"){  
-            self.alert("登录态已过期，请重新登录试试");
-          }else{
-            self.alert(response.message);
-          }
-        }).catch(err => {
-          console.log(err);
-        });
-      },
-      //app右上角分享接口调用
-      share_btn() {
-        var thisurl = window.location.href;
-        var linkUrl = thisurl.substring(0,thisurl.indexOf('#')+1)+ "/firstPage";
-      
-        var self = this;
-        var obj = {
-            title: 'AI为你写诗，为你做不可能的事', // 分享标题
-            desc: '亲手制作一份专属情书送给Ta吧~', // 分享描述
-            description: '亲手制作一份专属情书送给Ta吧~', // 分享描述
-            link: linkUrl,
-            url: linkUrl,
-            imgUrl: paic.shareUrl, // 分享图标
-            imageUrl: paic.shareUrl, // 分享图标
-            bounce: false,//是否直接弹起native分享选择页
-            channel:"1,2,3"
-        };
-        var data = JSON.stringify(obj);
-        App.call("onMenuShare",data,function(res){
-            if(typeof res == "string"){
-                res = JSON.parse(res);
-            }
-            if(res.code == 1){
-              self.upload_pv('/2018/aug/loveletter/homeShare');
-            }
-            
-        });
+      upload_pv(url){//首页访问量埋点
+        
        },
-      upload_click(){
-         let button = this.$route.query.button;
-         if(button==1){
-           this.upload_pv('/2018/aug/loveletter/homeButtonClickNum');
-         }
+      share_btn() {//app右上角分享接口调用
+        
        },
       alert(msg){
          if( this.alert_setTimeOut ){
@@ -426,9 +366,6 @@
       },
      },
     mounted(){
-      this.share_btn();
-      this.upload_pv('/2018/aug/loveletter/home');//上报访问
-      this.upload_click();//上报二级菜单点击量
       this.getTheme();//获取主题列表
     }
 
